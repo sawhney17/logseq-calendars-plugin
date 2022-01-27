@@ -2,13 +2,42 @@
 
 # Logseq Calendars Plugin
 
-A plugin that allows you to import calendar events from GCal, iCloud, Outlook and web based subscriptions in the iCal format. 
+A plugin that allows you to import calendar events from GCal, iCloud, Outlook and web based subscriptions in the iCal format. This appends all of the events scheduled for the current day to that days daily note page. 
+
+## Usage
+- Three ways to import events
+    1. Use the command pallet via `mod+shift+p` and select a specific calendar to import
+    2. Use the keyboard shortcut you defined in the settings to import that specific calendar
+    3. Click the icon in the toolbar to import **all** calendars to daily note page 
 
 ## Setup
 1. Get the ics link from each calendar provider using the below steps
 2. In Logseq, navigate to the entry in the plugins list for "Logseq Calendar Plugins
 3. Click the gear and then "Open Settings"
 4. In settings, enter the following: 
+```json
+{
+  "disabled": false,
+  "template": "{Start} - {End}: {Title}", 
+  "templateLine2": "{Description}", 
+  "accounts": {
+    "Google Calendar": [
+      "https://calendar.google.com/calendar/ical/rao6fvrrsq6mdorf9n30fs6mk4%40group.calendar.google.com/private-18ccd424400ef24c5d343ec93b289590/basic.ics",
+      "n t" 
+    ],
+    "iCloud": [ 
+      "https://p54-caldav.icloud.com/published/2/MTcyOTMzMjIwNTAxNzI5M-ibrzX3UhprTcakzWiFfAyvzHuJSIuassVxcCUrtpJD",
+      "n a" 
+    ]
+  }
+}
+```
+- `Disabled` is required and is defined by logseq itself, you don't need to do anything here
+- `template` is the text that will go on the parent block(more on the syntax below)
+    - Underneath the block titled the calendar name, you will see blocks in this format
+- `Templateline` is a block indented after `template`
+- accounts are defined in the format `"AccountName": ["urlFromNextStep", "desired keyboard shortcut"], "SecondAccountName": ["urlFromNextStep", "desired keyboard shortcut"], `
+    - You can add more than 2 accounts and can name the account whatever
 
 ### Google Calendar
 1. In the website, go to your calendar
@@ -38,3 +67,12 @@ A plugin that allows you to import calendar events from GCal, iCloud, Outlook an
 5. Copy the link that the text `this link` points to. 
 6. This is the linkk you need
 
+## Custom templates
+
+-  to set custom templates, you can use the following placeholders
+    -  `{Description}`
+    -  `{title}`
+    -  `{start}`
+    -  `{end}`
+    -  `{date}`
+- Templates are the format by which the tasks are inserted
