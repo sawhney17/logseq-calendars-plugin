@@ -1,10 +1,8 @@
-import { calendar } from '@googleapis/calendar';
 import '@logseq/libs';
 import { PageEntity } from '@logseq/libs/dist/LSPlugin.user';
 const ical = require('node-ical');
 const axios = require('axios');
 
-// let url  = "https://calendar.google.com/calendar/ical/rao6fvrrsq6mdorf9n30fs6mk4%40group.calendar.google.com/private-18ccd424400ef24c5d343ec93b289590/basic.ics"
 let calendarName = "Gcal"
 async function rawParser(rawData) {
   logseq.App.showMsg("Parsing Calendar Items")
@@ -48,16 +46,6 @@ function formatTime(rawTimeStamp){
 }
   return formattedTime
 }
-// function timeConverter(x){
-//   var a = new Date(x * 1000);
-//   // var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-//   var year = a.getFullYear();
-//   // var month = months[a.getMonth()];
-//   var month = a.getMonth()+1
-//   var date = a.getDate();
-//   var time = `${year}-${month}-${date}`;
-//   return time
-// }
 
 const getDateForPage = (d: Date, preferredDateFormat: string) => {
   const getYear = d.getFullYear();
@@ -147,7 +135,7 @@ async function insertJournalBlocks(data, preferredDateFormat:string, calendarNam
 // }
 async function openCalendar2 (preferredDateFormat, calendarName, url, settings) {
   try{
-  logseq.App.showMsg("Fetching Google Calendar Items")
+  logseq.App.showMsg("Fetching Calendar Items")
   let response2 = await axios.get(url)
   var hello = await rawParser(response2.data)
   // insertBlocks(hello)
@@ -160,7 +148,7 @@ async function openCalendar2 (preferredDateFormat, calendarName, url, settings) 
 async function main () {
   const userConfigs = await logseq.App.getUserConfigs();
   const preferredDateFormat2 = userConfigs.preferredDateFormat;
-  logseq.updateSettings({disabled: false, template: "{Start} - {End}: {Title}", templateLine2: "{Description}", accounts: {"Google Calendar": ["https://calendar.google.com/calendar/ical/rao6fvrrsq6mdorf9n30fs6mk4%40group.calendar.google.com/private-18ccd424400ef24c5d343ec93b289590/basic.ics", "n t"], "ManageBac": ["https://diadubai.managebac.com/student/events/token/da3d0b00-f79c-0139-3e73-068251f11fb2.ics", "n a"]}})
+  logseq.updateSettings({disabled: false, template: "{Start} - {End}: {Title}", templateLine2: "{Description}", accounts: {"Account 1": ["", "f 1"], "ManageBac": ["", "f 2"]}})
   logseq.provideModel({
    async openCalendar2(){
      let fullSettings = await logseq.settings

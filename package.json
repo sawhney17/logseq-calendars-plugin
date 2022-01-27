@@ -15,7 +15,6 @@
   "type": "commonjs",
   "license": "ISC",
   "dependencies": {
-    "@googleapis/calendar": "^1.0.1",
     "@logseq/libs": "0.0.1-alpha.34",
     "axios": "^0.25.0",
     "node-ical": "^0.14.1",
