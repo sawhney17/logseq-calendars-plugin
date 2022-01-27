@@ -1,0 +1,32 @@
+{
+  "name": "logseq-ical-plugin",
+  "version": "1.0.0",
+  "description": "Import GCal, iCloud,and Outlook calendars to your logseq daily note",
+  "main": "dist/index.html",
+  "targets": {
+    "main": false
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "parcel build --no-source-maps index.html --public-url ./"
+  },
+  "keywords": [],
+  "author": "Aryan Sawhney",
+  "type": "commonjs",
+  "license": "ISC",
+  "dependencies": {
+    "@googleapis/calendar": "^1.0.1",
+    "@logseq/libs": "0.0.1-alpha.34",
+    "axios": "^0.25.0",
+    "node-ical": "^0.14.1",
+    "tailwind": "^4.0.0"
+  },
+  "logseq": {
+    "id": "logseq-ical-plugin",
+    "title": "logseq-ical-plugin",
+    "icon": "./icon.png"
+  },
+  "devDependencies": {
+    "parcel": "^2.0.0"
+  }
+}
