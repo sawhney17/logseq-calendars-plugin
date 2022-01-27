@@ -76,3 +76,7 @@ A plugin that allows you to import calendar events from GCal, iCloud, Outlook an
     -  `{end}`
     -  `{date}`
 - Templates are the format by which the tasks are inserted
+
+## Credits
+- <a href="https://www.flaticon.com/free-icons/calendar" title="calendar icons">Calendar icons created by Freepik - Flaticon</a>
+- Credits to https://github.com/jens-maus/node-ical
