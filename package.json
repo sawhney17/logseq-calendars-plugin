@@ -1,6 +1,6 @@
 {
-  "name": "logseq-ical-plugin",
-  "version": "1.0.0",
+  "name": "logseq-calendars-plugin",
+  "version": "1.0.1",
   "description": "Import GCal, iCloud,and Outlook calendars to your logseq daily note",
   "main": "dist/index.html",
   "targets": {
@@ -21,8 +21,8 @@
     "tailwind": "^4.0.0"
   },
   "logseq": {
-    "id": "logseq-ical-plugin",
-    "title": "logseq-ical-plugin",
+    "id": "logseq-calendars-plugin",
+    "title": "logseq-calendars-plugin",
     "icon": "./icon.png"
   },
   "devDependencies": {
