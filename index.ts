@@ -148,7 +148,7 @@ async function openCalendar2 (preferredDateFormat, calendarName, url, settings) 
 async function main () {
   const userConfigs = await logseq.App.getUserConfigs();
   const preferredDateFormat2 = userConfigs.preferredDateFormat;
-  logseq.updateSettings({disabled: false, template: "{Start} - {End}: {Title}", templateLine2: "{Description}", accounts: {"Account 1": ["", "f 1"], "ManageBac": ["", "f 2"]}})
+  // logseq.updateSettings({disabled: false, template: "{Start} - {End}: {Title}", templateLine2: "{Description}", accounts: {"Account 1": ["", "f 1"], "ManageBac": ["", "f 2"]}})
   logseq.provideModel({
    async openCalendar2(){
      let fullSettings = await logseq.settings
