@@ -22,7 +22,8 @@ jobs:
       - name: Build
         id: build
         run: |
-          parcel build --no-source-maps index.html --public-url ./
+          cd ${{ env.PLUGIN_NAME }}
+          yarn build
           mkdir ${{ env.PLUGIN_NAME }}
           cp README.md package.json icon.png ${{ env.PLUGIN_NAME }}
           mv dist ${{ env.PLUGIN_NAME }}
