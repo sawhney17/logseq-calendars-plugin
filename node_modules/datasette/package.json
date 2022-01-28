@@ -1,0 +1,40 @@
+{
+  "name": "datasette",
+  "version": "1.0.1",
+  "description": "datasette is a key-value container for arbitrary data.",
+  "contributors": [
+    {
+      "name": "Golo Roden",
+      "email": "golo.roden@thenativeweb.io"
+    },
+    {
+      "name": "Matthias Wagler",
+      "email": "matthias.wagler@thenativeweb.io"
+    },
+    {
+      "name": "Jan-Hendrik Grundhöfer",
+      "email": "jan-hendrik.grundhoefer@thenativeweb.io"
+    }
+  ],
+  "main": "dist/Datasette.js",
+  "dependencies": {
+    "comparejs": "1.0.0",
+    "eventemitter2": "5.0.1",
+    "lodash": "4.17.5"
+  },
+  "devDependencies": {
+    "assertthat": "1.0.0",
+    "cases": "1.0.0",
+    "roboter": "0.15.6",
+    "roboter-server": "0.15.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/thenativeweb/datasette.git"
+  },
+  "keywords": [
+    "configuration",
+    "key-value"
+  ],
+  "license": "MIT"
+}

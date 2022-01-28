@@ -1,0 +1,68 @@
+{
+  "name": "tailwind",
+  "version": "4.0.0",
+  "description": "tailwind is a base module for streaming and evented CQS applications.",
+  "contributors": [
+    {
+      "name": "Golo Roden",
+      "email": "golo.roden@thenativeweb.io"
+    },
+    {
+      "name": "Matthias Wagler",
+      "email": "matthias.wagler@thenativeweb.io"
+    },
+    {
+      "name": "Jan-Hendrik Grundhöfer",
+      "email": "jan-hendrik.grundhoefer@thenativeweb.io"
+    }
+  ],
+  "main": "dist/tailwind.js",
+  "dependencies": {
+    "@babel/runtime": "7.3.4",
+    "ajv": "6.10.0",
+    "app-root-path": "2.1.0",
+    "async-retry": "1.2.3",
+    "body-parser": "1.18.3",
+    "commands-events": "1.0.4",
+    "compression": "1.7.3",
+    "content-type": "1.0.4",
+    "cors": "2.8.5",
+    "crypto2": "2.0.0",
+    "datasette": "1.0.1",
+    "draht": "1.0.1",
+    "express": "4.16.4 ",
+    "flaschenpost": "1.1.3",
+    "hase": "2.0.0",
+    "json-lines": "1.0.0",
+    "limes": "2.0.0",
+    "lodash": "4.17.11",
+    "lusca": "1.6.1",
+    "morgan": "1.9.1",
+    "nocache": "2.0.0",
+    "partof": "1.0.0",
+    "processenv": "1.1.0",
+    "stethoskop": "1.0.0",
+    "timer2": "1.0.0",
+    "uuidv4": "3.0.1",
+    "ws": "6.2.0"
+  },
+  "devDependencies": {
+    "amqplib": "0.5.3",
+    "assertthat": "2.0.3",
+    "common-tags": "1.8.0",
+    "json-lines-client": "1.0.1",
+    "needle": "2.2.4",
+    "nodeenv": "1.0.0",
+    "roboter": "4.0.2",
+    "shelljs": "0.8.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/thenativeweb/tailwind.git"
+  },
+  "keywords": [
+    "cqs",
+    "cqrs"
+  ],
+  "license": "AGPL-3.0"
+}

@@ -1,0 +1,31 @@
+{
+  "name": "formats",
+  "version": "1.0.0",
+  "description": "formats is a collection of validators.",
+  "contributors": [
+    {
+      "name": "Golo Roden",
+      "email": "golo.roden@thenativeweb.io"
+    },
+    {
+      "name": "Matthias Wagler",
+      "email": "matthias.wagler@thenativeweb.io"
+    }
+  ],
+  "main": "dist/formats.js",
+  "dependencies": {},
+  "devDependencies": {
+    "assertthat": "1.0.0",
+    "roboter": "0.15.6",
+    "roboter-server": "0.15.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/thenativeweb/formats.git"
+  },
+  "keywords": [
+    "format",
+    "validator"
+  ],
+  "license": "MIT"
+}

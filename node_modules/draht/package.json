@@ -1,0 +1,33 @@
+{
+  "name": "draht",
+  "version": "1.0.1",
+  "description": "draht provides process-level messaging.",
+  "contributors": [
+    {
+      "name": "Golo Roden",
+      "email": "golo.roden@thenativeweb.io"
+    },
+    {
+      "name": "Matthias Wagler",
+      "email": "matthias.wagler@thenativeweb.io"
+    }
+  ],
+  "main": "dist/Draht.js",
+  "dependencies": {
+    "eventemitter2": "5.0.1"
+  },
+  "devDependencies": {
+    "assertthat": "1.0.0",
+    "roboter": "0.15.6",
+    "roboter-server": "0.15.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/thenativeweb/draht.git"
+  },
+  "keywords": [
+    "eventbus",
+    "messaging"
+  ],
+  "license": "MIT"
+}

@@ -1,0 +1,38 @@
+{
+  "name": "varname",
+  "version": "2.0.3",
+  "description": "Convert strings between different variable naming formats",
+  "keywords": [
+    "camelcase",
+    "camelback",
+    "naming",
+    "string",
+    "variable"
+  ],
+  "author": "Rowan Manning (http://rowanmanning.co.uk/)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rowanmanning/varname.git"
+  },
+  "homepage": "https://github.com/rowanmanning/varname",
+  "bugs": "https://github.com/rowanmanning/varname/issues",
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10"
+  },
+  "devDependencies": {
+    "browserify": "^11",
+    "istanbul": "~0.3",
+    "jscs": "^2",
+    "jshint": "^2",
+    "mocha": "^2",
+    "mockery": "~1.4",
+    "proclaim": "^3",
+    "sinon": "^1",
+    "uglify-js": "^2"
+  },
+  "main": "./lib/varname.js",
+  "scripts": {
+    "test": "make ci"
+  }
+}

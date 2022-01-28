@@ -1,0 +1,40 @@
+{
+  "name": "comparejs",
+  "version": "1.0.0",
+  "description": "comparejs implements JavaScript's comparison operators the way you would expect them to be.",
+  "contributors": [
+    {
+      "name": "Golo Roden",
+      "email": "golo.roden@thenativeweb.io"
+    },
+    {
+      "name": "Stefan Kley",
+      "email": "s.kley@kleywalker.de"
+    },
+    {
+      "name": "Ryan Hughes",
+      "email": "ryanhooz@gmail.com"
+    },
+    {
+      "name": "Jan-Hendrik Grundhöfer",
+      "email": "jan-hendrik.grundhoefer@thenativeweb.io"
+    }
+  ],
+  "main": "dist/compare.js",
+  "devDependencies": {
+    "roboter": "0.15.6",
+    "roboter-server": "0.15.6",
+    "should": "13.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/thenativeweb/comparejs.git"
+  },
+  "keywords": [
+    "assert",
+    "compare",
+    "equal",
+    "test"
+  ],
+  "license": "MIT"
+}

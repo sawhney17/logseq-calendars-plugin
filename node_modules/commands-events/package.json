@@ -1,0 +1,35 @@
+{
+  "name": "commands-events",
+  "version": "1.0.4",
+  "description": "commands-events provides commands and events for DDD-based applications.",
+  "contributors": [
+    {
+      "name": "Golo Roden",
+      "email": "golo.roden@thenativeweb.io"
+    },
+    {
+      "name": "Matthias Wagler",
+      "email": "matthias.wagler@thenativeweb.io"
+    }
+  ],
+  "main": "dist/index.js",
+  "dependencies": {
+    "@babel/runtime": "7.2.0",
+    "formats": "1.0.0",
+    "uuidv4": "2.0.0"
+  },
+  "devDependencies": {
+    "assertthat": "2.0.1",
+    "roboter": "3.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/thenativeweb/commands-events.git"
+  },
+  "keywords": [
+    "cqrs",
+    "ddd",
+    "wolkenkit"
+  ],
+  "license": "AGPL-3.0"
+}

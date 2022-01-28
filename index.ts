@@ -9,7 +9,7 @@ async function rawParser(rawData) {
 	var eventsArray = []
   var rawDataV2 = ical.parseICS(rawData)
   // console.log("rawData")
-  // console.log(rawData)
+  console.log(rawData)
   
 	for (const dataValue in rawDataV2) {
 		eventsArray.push(rawDataV2[dataValue]); //simplifying results, credits to https://github.com/muness/obsidian-ics for this implementations
