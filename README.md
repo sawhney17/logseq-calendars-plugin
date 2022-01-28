@@ -75,7 +75,11 @@ A plugin that allows you to import calendar events from GCal, iCloud, Outlook an
     -  `{start}`
     -  `{end}`
     -  `{date}`
-- Templates are the format by which the tasks are inserted
+- Templates are the format by which the events are inserted
+    -  You can define templates in settings
+- Difference between `template` and `templateline2`
+<img width="993" alt="Screen Shot 2022-01-28 at 3 05 54 PM" src="https://user-images.githubusercontent.com/80150109/151536767-c4ca96aa-a57c-4ee6-9c7b-ee36b3d448ce.png">
+
 
 ## Credits
 - <a href="https://www.flaticon.com/free-icons/calendar" title="calendar icons">Calendar icons created by Freepik - Flaticon</a>
