@@ -17,9 +17,17 @@ async function rawParser(rawData) {
 	return eventsArray;
 }
 
-function templateFormatter(template, description = "", date = "", start = "", end = "", title = ""){
-let subsitutions = {"{Description}": description, "{Date}" :date, "{Start}": start, "{End}": end, "{Title}":title}
+function templateFormatter(template, description = "No Description", date = "No Date", start = "No Start", end = "No End", title = "No Title"){
+  let properDescription
+  if (description == ""){
+    properDescription = "No Description"
+  }
+  else{
+    properDescription = description
+  }
+  let subsitutions = {"{Description}": properDescription, "{Date}" :date, "{Start}": start, "{End}": end, "{Title}":title}
 var templatex1 = template
+
 for (const substitute in subsitutions){
   let template2 = templatex1.replace(substitute, subsitutions[substitute])
   let template3 = template2.replace(substitute.toLowerCase(), subsitutions[substitute])
@@ -101,7 +109,12 @@ async function insertJournalBlocks(data, preferredDateFormat:string, calendarNam
     let summary = data[dataKey]["summary"]
       let headerString = templateFormatter(settings.template, description, startDate, startTime, endTime, summary)
       if (getDateForPage(new Date(startDate), preferredDateFormat) == getDateForPage(new Date(), preferredDateFormat)){
-    let currentBlock = await logseq.Editor.insertBlock(startBlock.uuid, `${headerString}`, {sibling:false})}
+    var currentBlock = await logseq.Editor.insertBlock(startBlock.uuid, `${headerString}`, {sibling:false})
+    if (settings.templateLine2 != ""){
+      console.log(description)
+    let SecondTemplateLine = templateFormatter(settings.templateLine2, description, startDate, startTime, endTime, summary)
+    console.log(currentBlock)
+    logseq.Editor.insertBlock(currentBlock.uuid, `${SecondTemplateLine}`, {sibling:false})}}
   }
 }
 
