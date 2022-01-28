@@ -1,6 +1,6 @@
 {
   "name": "jwa",
-  "version": "2.0.0",
+  "version": "1.4.1",
   "description": "JWA implementation (supports all JWS algorithms)",
   "main": "index.js",
   "directories": {
