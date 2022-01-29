@@ -22,12 +22,10 @@ A plugin that allows you to import calendar events from GCal, iCloud, Outlook an
   "templateLine2": "{Description}", 
   "accounts": {
     "Google Calendar": [
-      "https://calendar.google.com/calendar/ical/rao6fvrrsq6mdorf9n30fs6mk4%40group.calendar.google.com/private-18ccd424400ef24c5d343ec93b289590/basic.ics",
-      "n t" 
+      "https://calendar.google.com/calendar/ical/rao6fvrrsq6mdorf9n30fs6mk4%40group.calendar.google.com/private-18ccd424400ef24c5d343ec93b289590/basic.ics"
     ],
     "iCloud": [ 
-      "https://p54-caldav.icloud.com/published/2/MTcyOTMzMjIwNTAxNzI5M-ibrzX3UhprTcakzWiFfAyvzHuJSIuassVxcCUrtpJD",
-      "n a" 
+      "https://p54-caldav.icloud.com/published/2/MTcyOTMzMjIwNTAxNzI5M-ibrzX3UhprTcakzWiFfAyvzHuJSIuassVxcCUrtpJD"
     ]
   },
   "timeFormat": 12
@@ -37,10 +35,11 @@ A plugin that allows you to import calendar events from GCal, iCloud, Outlook an
 - `template` is the text that will go on the parent block(more on the syntax below)
     - Underneath the block titled the calendar name, you will see blocks in this format
 - `Templateline` is a block indented after `template`
-- accounts are defined in the format `"AccountName": ["urlFromNextStep", "desired keyboard shortcut"], "SecondAccountName": ["urlFromNextStep", "desired keyboard shortcut"], `
+- accounts are defined in the format `"AccountName": ["urlFromNextStep", "desired keyboard shortcut"], "SecondAccountName": ["icsURL"], `
     - You can add more than 2 accounts and can name the account whatever
 - Time format can be between 12 and 24. The choice is regarding whether you want 24 hours time(19:00) or 12 hour time. (7:00 pm)
 
+## Getting the ICS URL 
 ### Google Calendar
 1. In the website, go to your calendar
 2. Go to the settings for the specific calendar you want
@@ -85,4 +84,5 @@ A plugin that allows you to import calendar events from GCal, iCloud, Outlook an
 
 ## Credits
 - <a href="https://www.flaticon.com/free-icons/calendar" title="calendar icons">Calendar icons created by Freepik - Flaticon</a>
+- Credits to @hkgnp for his logseq-dateutil library
 - Credits to https://github.com/jens-maus/node-ical
