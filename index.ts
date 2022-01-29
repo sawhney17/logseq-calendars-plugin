@@ -39,7 +39,7 @@ for (const substitute in subsitutions){
 return templatex1
 }
 
-function formatTime(rawTimeStamp){
+function formatTime(rawTimeStamp, settings){
   let formattedTimeStamp = new Date(rawTimeStamp)
   let initialHours = formattedTimeStamp.getHours()
   let hours;
@@ -55,7 +55,15 @@ function formatTime(rawTimeStamp){
   }
   else{formattedTime = hours + ":" + (formattedTimeStamp.getMinutes())
 }
-  return formattedTime
+  if (typeof settings.timeFormat != "undefined"){
+    return new Date('1970-01-01T' + formattedTime + 'Z')
+    .toLocaleTimeString('en-US',
+      {timeZone:'UTC',hour12:true,hour:'numeric',minute:'numeric'}
+    );
+  
+  }
+else{
+  return formattedTime}
 }
 
 // const getDateForPage = (d: Date, preferredDateFormat: string) => {
@@ -112,8 +120,8 @@ async function insertJournalBlocks(data, preferredDateFormat:string, calendarNam
     let description = data[dataKey]["description"]
     let formattedStart = new Date(data[dataKey]["start"])
     let startDate = removeBrackets(getDateForPage(formattedStart, preferredDateFormat))
-    let startTime = formatTime(formattedStart)
-    let endTime = formatTime(data[dataKey]["end"])
+    let startTime = formatTime(formattedStart, settings)
+    let endTime = formatTime(data[dataKey]["end"], settings)
     let summary = data[dataKey]["summary"]
     console.log(startDate)
       let headerString = templateFormatter(settings.template, description, startDate, startTime, endTime, summary)

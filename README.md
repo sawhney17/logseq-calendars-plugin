@@ -29,7 +29,8 @@ A plugin that allows you to import calendar events from GCal, iCloud, Outlook an
       "https://p54-caldav.icloud.com/published/2/MTcyOTMzMjIwNTAxNzI5M-ibrzX3UhprTcakzWiFfAyvzHuJSIuassVxcCUrtpJD",
       "n a" 
     ]
-  }
+  },
+  "timeFormat": 12
 }
 ```
 - `Disabled` is required and is defined by logseq itself, you don't need to do anything here
@@ -38,6 +39,7 @@ A plugin that allows you to import calendar events from GCal, iCloud, Outlook an
 - `Templateline` is a block indented after `template`
 - accounts are defined in the format `"AccountName": ["urlFromNextStep", "desired keyboard shortcut"], "SecondAccountName": ["urlFromNextStep", "desired keyboard shortcut"], `
     - You can add more than 2 accounts and can name the account whatever
+- Time format can be between 12 and 24. The choice is regarding whether you want 24 hours time(19:00) or 12 hour time. (7:00 pm)
 
 ### Google Calendar
 1. In the website, go to your calendar
