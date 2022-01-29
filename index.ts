@@ -115,7 +115,6 @@ async function insertJournalBlocks(data, preferredDateFormat:string, calendarNam
   let pageBlocks = await logseq.Editor.getPageBlocksTree(pageID.name)
   let footerBlock = pageBlocks[pageBlocks.length -1]
   let startBlock = await logseq.Editor.insertBlock(footerBlock.uuid, calendarName, {sibling:true})
-  console.log("hello")
   for (const dataKey in data){
     let description = data[dataKey]["description"]
     let formattedStart = new Date(data[dataKey]["start"])
@@ -123,19 +122,16 @@ async function insertJournalBlocks(data, preferredDateFormat:string, calendarNam
     let startTime = formatTime(formattedStart, settings)
     let endTime = formatTime(data[dataKey]["end"], settings)
     let summary = data[dataKey]["summary"]
-    console.log(startDate)
       let headerString = templateFormatter(settings.template, description, startDate, startTime, endTime, summary)
-      console.log("failure")
-      console.log(emptyToday)
       if (startDate == emptyToday){
-        console.log("Success")
     var currentBlock = await logseq.Editor.insertBlock(startBlock.uuid, `${headerString}`, {sibling:false})
     if (settings.templateLine2 != ""){
-      console.log(startBlock)
     let SecondTemplateLine = templateFormatter(settings.templateLine2, description, startDate, startTime, endTime, summary)
-    console.log(currentBlock)
     logseq.Editor.insertBlock(currentBlock.uuid, `${SecondTemplateLine}`, {sibling:false})}}
-    console.log("hello")
+  }
+  console.log(startBlock.children)
+  if (startBlock.children.length == 0){
+logseq.Editor.removeBlock(startBlock.uuid)
   }
 }
 async function openCalendar2 (preferredDateFormat, calendarName, url, settings) {
