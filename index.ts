@@ -170,9 +170,6 @@ for (const accountName in logseq.settings.accounts){
       {
         key: `logseq-${accountName}-sync`,
         label: `Syncing with ${accountName}`,
-        keybinding: {
-          binding: accountSetting[1],
-        },
       },
       () => {
           openCalendar2(preferredDateFormat2, accountName, accountSetting[0], fullSettings);
