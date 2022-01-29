@@ -1,19 +1,22 @@
 import '@logseq/libs';
+import { safetyPathNormalize } from '@logseq/libs/dist/helpers';
 import { PageEntity } from '@logseq/libs/dist/LSPlugin.user';
 const ical = require('node-ical');
 const axios = require('axios');
+import { getDateForPage} from 'logseq-dateutils';
+import { start } from 'repl';
+
 
 let calendarName = "Gcal"
 async function rawParser(rawData) {
   logseq.App.showMsg("Parsing Calendar Items")
+  console.log("hello")
 	var eventsArray = []
   var rawDataV2 = ical.parseICS(rawData)
-  // console.log("rawData")
-  console.log(rawData)
-  
 	for (const dataValue in rawDataV2) {
 		eventsArray.push(rawDataV2[dataValue]); //simplifying results, credits to https://github.com/muness/obsidian-ics for this implementations
 	}
+  console.log(eventsArray)
 	return eventsArray;
 }
 
@@ -55,103 +58,83 @@ function formatTime(rawTimeStamp){
   return formattedTime
 }
 
-const getDateForPage = (d: Date, preferredDateFormat: string) => {
-  const getYear = d.getFullYear();
-  const getMonth = d.toString().substring(4, 7);
-  const getMonthNumber = d.getMonth() + 1;
-  const getDate = d.getDate();
+// const getDateForPage = (d: Date, preferredDateFormat: string) => {
+//   const getYear = d.getFullYear();
+//   const getMonth = d.toString().substring(4, 7);
+//   const getMonthNumber = d.getMonth() + 1;
+//   const getDate = d.getDate();
 
-  if (preferredDateFormat === 'MMM do yyyy') {
-    return `${getMonth} ${getOrdinalNum(getDate)}, ${getYear}`;
-  } else if (
-    preferredDateFormat.includes('yyyy') &&
-    preferredDateFormat.includes('MM') &&
-    preferredDateFormat.includes('dd') &&
-    ('-' || '_' || '/')
-  ) {
-    var mapObj = {
-      yyyy: getYear,
-      dd: ('0' + getDate).slice(-2),
-      MM: ('0' + getMonthNumber).slice(-2),
-    };
-    let dateStr = preferredDateFormat;
-    dateStr = dateStr.replace(/yyyy|dd|MM/gi, function (matched) {
-      return mapObj[matched];
-    });
-    return `${dateStr}`;
-  } else {
-    return `${getMonth} ${getOrdinalNum(getDate)}, ${getYear}`;
-  }
-};
+//   if (preferredDateFormat === 'MMM do yyyy') {
+//     return `${getMonth} ${getOrdinalNum(getDate)}, ${getYear}`;
+//   } else if (
+//     preferredDateFormat.includes('yyyy') &&
+//     preferredDateFormat.includes('MM') &&
+//     preferredDateFormat.includes('dd') &&
+//     ('-' || '_' || '/')
+//   ) {
+//     var mapObj = {
+//       yyyy: getYear,
+//       dd: ('0' + getDate).slice(-2),
+//       MM: ('0' + getMonthNumber).slice(-2),
+//     };
+//     let dateStr = preferredDateFormat;
+//     dateStr = dateStr.replace(/yyyy|dd|MM/gi, function (matched) {
+//       return mapObj[matched];
+//     });
+//     return `${dateStr}`;
+//   } else {
+//     return `${getMonth} ${getOrdinalNum(getDate)}, ${getYear}`;
+//   }
+// };
 
-const getOrdinalNum = (n: number) => {
-  return (
-    n +
-    (n > 0
-      ? ['th', 'st', 'nd', 'rd'][(n > 3 && n < 21) || n % 10 > 3 ? 0 : n % 10]
-      : '')
-  );
-};
+// const getOrdinalNum = (n: number) => {
+//   return (
+//     n +
+//     (n > 0
+//       ? ['th', 'st', 'nd', 'rd'][(n > 3 && n < 21) || n % 10 > 3 ? 0 : n % 10]
+//       : '')
+//   );
+// };
 
+function removeBrackets(input){
+  return(input.replace("[[", "").replace("]]", ""))
+}
 async function insertJournalBlocks(data, preferredDateFormat:string, calendarName, settings){
-  let pageID: PageEntity = await logseq.Editor.createPage(getDateForPage(new Date(), preferredDateFormat))
+  let today = (getDateForPage(new Date(), preferredDateFormat))
+  let emptyToday = removeBrackets(today)
+  let pageID: PageEntity = await logseq.Editor.createPage(emptyToday)
   // logseq.App.pushState('page', { name: pageID.name })
   let pageBlocks = await logseq.Editor.getPageBlocksTree(pageID.name)
   let footerBlock = pageBlocks[pageBlocks.length -1]
   let startBlock = await logseq.Editor.insertBlock(footerBlock.uuid, calendarName, {sibling:true})
-  console.log(data)
+  console.log("hello")
   for (const dataKey in data){
-    // let date = Math.floor(new Date(data[dataKey]["start"]).getTime() / 1000)
     let description = data[dataKey]["description"]
-    let startDate = data[dataKey]["start"]
-    let startTime = formatTime(startDate)
+    let formattedStart = new Date(data[dataKey]["start"])
+    let startDate = removeBrackets(getDateForPage(formattedStart, preferredDateFormat))
+    let startTime = formatTime(formattedStart)
     let endTime = formatTime(data[dataKey]["end"])
     let summary = data[dataKey]["summary"]
+    console.log(startDate)
       let headerString = templateFormatter(settings.template, description, startDate, startTime, endTime, summary)
-      if (getDateForPage(new Date(startDate), preferredDateFormat) == getDateForPage(new Date(), preferredDateFormat)){
+      console.log("failure")
+      console.log(emptyToday)
+      if (startDate == emptyToday){
+        console.log("Success")
     var currentBlock = await logseq.Editor.insertBlock(startBlock.uuid, `${headerString}`, {sibling:false})
     if (settings.templateLine2 != ""){
-      console.log(description)
+      console.log(startBlock)
     let SecondTemplateLine = templateFormatter(settings.templateLine2, description, startDate, startTime, endTime, summary)
     console.log(currentBlock)
     logseq.Editor.insertBlock(currentBlock.uuid, `${SecondTemplateLine}`, {sibling:false})}}
+    console.log("hello")
   }
 }
-
-// async function insertBlocks(data){
-//   logseq.App.showMsg("Inserting Google Calendar items!")
-//   logseq.Editor.deletePage("Google Calendar Import")
-//   try {
-//     var pageID = await logseq.Editor.getPage("Google Calendar Import")
-//     if (pageID == null){
-//       logseq.Editor.createPage("Google Calendar Import")
-//   }
-  
-//   pageID = await logseq.Editor.getPage("Google Calendar Import")
-//   // logseq.App.pushState('page', { name: pageID.name })
-//   for (const dataKey in data){
-//     let date = Math.floor(new Date(data[dataKey]["start"]).getTime() / 1000)
-//     let convertedStartDate = timeConverter(date)
-//     let currentBlock = await logseq.Editor.insertBlock(pageID.name, `${data[dataKey]["summary"]}\nSCHEDULED: <${convertedStartDate} MON>`, {isPageBlock: true})
-//     if (data[dataKey]["description"] != ""){    
-//       await logseq.Editor.insertBlock(currentBlock.uuid, `${data[dataKey]["description"]}`, {sibling: false})
-//     }
-    
-//   }
-// // }
-//   catch(err){
-//     console.log(err)
-//     logseq.App.showMsg(`There was an error`)
-    
-//   }
-  
-// }
 async function openCalendar2 (preferredDateFormat, calendarName, url, settings) {
   try{
   logseq.App.showMsg("Fetching Calendar Items")
   let response2 = await axios.get(url)
   var hello = await rawParser(response2.data)
-  // insertBlocks(hello)
   insertJournalBlocks(hello, preferredDateFormat, calendarName, settings)
 }
   catch(err){
@@ -172,7 +155,7 @@ async function main () {
    }
 )
 for (const accountName in logseq.settings.accounts){
-  console.log(await logseq.settings.accounts)
+  // console.log(await logseq.settings.accounts)
   let fullSettings = await logseq.settings
   let accountSetting  = fullSettings.accounts[accountName]
     logseq.App.registerCommandPalette(
@@ -193,7 +176,7 @@ for (const accountName in logseq.settings.accounts){
     key: 'open-calendar2',
     template: `
       <a class="button" data-on-click="openCalendar2">
-        <i class="ti ti-calendar-event"></i>
+        <i class="ti ti-calendar"></i>
       </a>
     `,
   })

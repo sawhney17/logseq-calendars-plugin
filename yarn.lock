@@ -2878,6 +2878,11 @@ log-symbols@^4.1.0:
     chalk "^4.1.0"
     is-unicode-supported "^0.1.0"
 
+logseq-dateutils@^0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/logseq-dateutils/-/logseq-dateutils-0.0.10.tgz#886b0d8894d986ba5e5ed7a765d2702dcfd3b7f2"
+  integrity sha512-oTgNtO4yv4MxCX5lDoPG6lQp6pu2aNOS93GHNmdg0dbKfIQWav2fupKYNyp7/rO4+82QEGPtO4ZwW5cWoNQnvA==
+
 lower-case@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/lower-case/-/lower-case-2.0.2.tgz#6fa237c63dbdc4a82ca0fd882e4722dc5e634e28"
