@@ -92,8 +92,10 @@ logseq.Editor.removeBlock(startBlock.uuid)
 
   }
 }
-async function openCalendar2 (preferredDateFormat, calendarName, url, settings) {
+async function openCalendar2 (calendarName, url, settings) {
   try{
+  const userConfigs = await logseq.App.getUserConfigs();
+  const preferredDateFormat = userConfigs.preferredDateFormat;
   logseq.App.showMsg("Fetching Calendar Items")
   let response2 = await axios.get(url)
   var hello = await rawParser(response2.data)
@@ -109,10 +111,12 @@ async function main () {
   // logseq.updateSettings({disabled: false, template: "{Start} - {End}: {Title}", templateLine2: "{Description}", accounts: {"Account 1": ["", "f 1"], "ManageBac": ["", "f 2"]}})
   logseq.provideModel({
    async openCalendar2(){
+    const userConfigs = await logseq.App.getUserConfigs();
+    const preferredDateFormat = userConfigs.preferredDateFormat;
      let fullSettings = await logseq.settings
      let settings = await fullSettings["accounts"]
      for (const accountName in settings){
-    openCalendar2(preferredDateFormat2, accountName, settings[accountName][0], fullSettings), fullSettings}
+    openCalendar2(accountName, settings[accountName][0], fullSettings), fullSettings}
    }
    }
 )
@@ -125,7 +129,7 @@ for (const accountName in logseq.settings.accounts){
         label: `Syncing with ${accountName}`,
       },
       () => {
-          openCalendar2(preferredDateFormat2, accountName, accountSetting[0], fullSettings);
+          openCalendar2(accountName, accountSetting[0], fullSettings);
       }
     );
     }
