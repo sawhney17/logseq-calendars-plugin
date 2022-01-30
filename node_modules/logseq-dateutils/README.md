@@ -13,19 +13,19 @@ npm i logseq-dateutils
 Import (you may also import only selective functions for your needs):
 
 ```
-import { getDateForPage, getDayInText, getScheduledDeadlineDateDay, getScheduledDeadlineDateDayTime } from 'logseq-dateutils';
+import { getDateForPage, getDateForPageWithoutBrackets, getDayInText, getScheduledDeadlineDateDay, getScheduledDeadlineDateDayTime } from 'logseq-dateutils';
 ```
 
 # Usage
 
 Below is an elaboration of the functions available:
 
-## getDateForPage
+## getDateForPage or getDateForPageWithoutBrackets
 
-Returns the specified date based on the user's preferred date format. Accepts 2 arguments.
+Returns the specified date based on the user's preferred date format. Accepts 2 arguments. `getDateForPage` returns the date with brackets (`[[date]]`) while `getDateForPageWithoutBrackets` returns the date without the brackets.
 
 ```
-import { getDateForPage, getDayInText, getScheduledDeadlineDate } from 'logseq-dateutils';
+import { getDateForPage, getDateForPageWithoutBrackets, getDayInText, getScheduledDeadlineDate } from 'logseq-dateutils';
 
 const preferredDateFormat = 'yyyy/MM/dd';
 const today = new Date();
