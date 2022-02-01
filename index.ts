@@ -53,7 +53,8 @@ function formatTime(rawTimeStamp, settings){
   }
   else{formattedTime = hours + ":" + (formattedTimeStamp.getMinutes())
 }
-  if (typeof settings.timeFormat != "undefined"){
+  
+  if (typeof settings.timeFormat == "undefined" || settings.timeFormat == 12){
     return new Date('1970-01-01T' + formattedTime + 'Z')
     .toLocaleTimeString('en-US',
       {timeZone:'UTC',hour12:true,hour:'numeric',minute:'numeric'}
@@ -66,18 +67,19 @@ else{
 
 async function insertJournalBlocks(data, preferredDateFormat:string, calendarName, settings){
   let emptyToday = (getDateForPageWithoutBrackets(new Date(), preferredDateFormat))
-  let pageID: PageEntity = await logseq.Editor.createPage(emptyToday)
+  let pageID: PageEntity = await logseq.Editor.createPage(emptyToday, {createFirstBlock: true})
   // logseq.App.pushState('page', { name: pageID.name })
   let pageBlocks = await logseq.Editor.getPageBlocksTree(pageID.name)
-  let footerBlock = pageBlocks[pageBlocks.length -1]
-  let startBlock = await logseq.Editor.insertBlock(footerBlock.uuid, calendarName, {sibling:true})
+  // let footerBlock = pageBlocks[pageBlocks.length -1]
+  let startBlock = await logseq.Editor.insertBlock(pageID.name, calendarName, {sibling:true, isPageBlock:true})
   for (const dataKey in data){
-    let description = data[dataKey]["description"]
+    let description = data[dataKey]["description"] //Parsing result from rawParser into usable data for templateFormatter
     let formattedStart = new Date(data[dataKey]["start"])
     let startDate = getDateForPageWithoutBrackets(formattedStart, preferredDateFormat)
     let startTime = formatTime(formattedStart, settings)
     let endTime = formatTime(data[dataKey]["end"], settings)
     let summary = data[dataKey]["summary"]
+    // using user provided template
       let headerString = templateFormatter(settings.template, description, startDate, startTime, endTime, summary)
       if (startDate == emptyToday){
     var currentBlock = await logseq.Editor.insertBlock(startBlock.uuid, `${headerString}`, {sibling:false})
@@ -102,8 +104,12 @@ async function openCalendar2 (calendarName, url, settings) {
   insertJournalBlocks(hello, preferredDateFormat, calendarName, settings)
 }
   catch(err){
-    console.log(`There was an error: ${err}`)
+    if (`${err}` == `Error: Request failed with status code 404`){
+      logseq.App.showMsg("Calendar not found: Check your URL")
+    }
+    console.log(err)
   }
+  
 }
 async function main () {
   const userConfigs = await logseq.App.getUserConfigs();
