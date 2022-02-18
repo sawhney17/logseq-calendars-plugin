@@ -31,13 +31,16 @@ A plugin that allows you to import calendar events from GCal, iCloud, Outlook an
   "timeFormat": 12
 }
 ```
-- `Disabled` is required and is defined by logseq itself, you don't need to do anything here
+- `disabled` is required and is defined by logseq itself, you don't need to do anything here
 - `template` is the text that will go on the parent block(more on the syntax below)
     - Underneath the block titled the calendar name, you will see blocks in this format
-- `Templateline` is a block indented after `template`
-- accounts are defined in the format `"AccountName": ["urlFromNextStep", "desired keyboard shortcut"], "SecondAccountName": ["icsURL"], `
-    - You can add more than 2 accounts and can name the account whatever
-- Time format can be between 12 and 24. The choice is regarding whether you want 24 hours time(19:00) or 12 hour time. (7:00 pm)
+- `templateLine2` is a block indented after `template`
+- `accounts` are defined in the format `"AccountName": ["IcsUrl", "Shortcut"]`
+    - You can add more accounts, just seperate them by `,`
+    - `AccountName` can be whatever you want
+    - `IcsUrl` follow [next step](#getting-the-ics-url) to get the url
+    - (optional) `Shortcut`
+- `timeFormat` can be 12 or 24. The choice is regarding whether you want 24 hours time(19:00) or 12 hour time. (7:00 pm)
 
 ## Getting the ICS URL 
 ### Google Calendar
@@ -72,10 +75,10 @@ A plugin that allows you to import calendar events from GCal, iCloud, Outlook an
 
 -  to set custom templates, you can use the following placeholders
     -  `{Description}`
-    -  `{title}`
-    -  `{start}`
-    -  `{end}`
-    -  `{date}`
+    -  `{Title}`
+    -  `{Start}`
+    -  `{End}`
+    -  `{Date}`
 - Templates are the format by which the events are inserted
     -  You can define templates in settings
 - Difference between `template` and `templateline2`
