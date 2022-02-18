@@ -18,15 +18,23 @@ async function rawParser(rawData) {
 	return eventsArray;
 }
 
-function templateFormatter(template, description = "No Description", date = "No Date", start = "No Start", end = "No End", title = "No Title"){
+function templateFormatter(template, description = "No Description", date = "No Date", start = "No Start", end = "No End", title = "No Title", location = "No Location"){
   let properDescription
+  let properLocation
   if (description == ""){
     properDescription = "No Description"
   }
   else{
     properDescription = description
   }
-  let subsitutions = {"{Description}": properDescription, "{Date}" :date, "{Start}": start, "{End}": end, "{Title}":title}
+  if (location == ""){
+    properLocation = "No Location"
+  }
+  else{
+    properLocation = location
+  }
+  console.log(location)
+  let subsitutions = {"{Description}": properDescription, "{Date}" :date, "{Start}": start, "{End}": end, "{Title}":title, "{Location}":properLocation}
 var templatex1 = template
 
 for (const substitute in subsitutions){
@@ -78,6 +86,7 @@ async function insertJournalBlocks(data, preferredDateFormat:string, calendarNam
     let startDate = getDateForPageWithoutBrackets(formattedStart, preferredDateFormat)
     let startTime = formatTime(formattedStart, settings)
     let endTime = formatTime(data[dataKey]["end"], settings)
+    let location = data[dataKey]["location"]
     let summary
     if (data[dataKey]["summary"]["val"]){
       summary = data[dataKey]["summary"]["val"]
@@ -87,11 +96,11 @@ async function insertJournalBlocks(data, preferredDateFormat:string, calendarNam
     }
     // using user provided template
     console.log(`Current Date: ${emptyToday}`)
-      let headerString = templateFormatter(settings.template, description, startDate, startTime, endTime, summary)
+      let headerString = templateFormatter(settings.template, description, startDate, startTime, endTime, summary, location)
       if (startDate == emptyToday){
     var currentBlock = await logseq.Editor.insertBlock(startBlock.uuid, `${headerString}`, {sibling:false})
     if (settings.templateLine2 != ""){
-    let SecondTemplateLine = templateFormatter(settings.templateLine2, description, startDate, startTime, endTime, summary)
+    let SecondTemplateLine = templateFormatter(settings.templateLine2, description, startDate, startTime, endTime, summary, location)
     await logseq.Editor.insertBlock(currentBlock.uuid, `${SecondTemplateLine}`, {sibling:false})}}
   }
   let updatedBlock = await logseq.Editor.getBlock(startBlock.uuid, {includeChildren: true})
