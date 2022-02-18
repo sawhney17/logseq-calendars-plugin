@@ -78,7 +78,13 @@ async function insertJournalBlocks(data, preferredDateFormat:string, calendarNam
     let startDate = getDateForPageWithoutBrackets(formattedStart, preferredDateFormat)
     let startTime = formatTime(formattedStart, settings)
     let endTime = formatTime(data[dataKey]["end"], settings)
-    let summary = data[dataKey]["summary"]
+    let summary
+    if (data[dataKey]["summary"]["val"]){
+      summary = data[dataKey]["summary"]["val"]
+    }
+    else{
+      summary = data[dataKey]["summary"]
+    }
     // using user provided template
     console.log(`Current Date: ${emptyToday}`)
       let headerString = templateFormatter(settings.template, description, startDate, startTime, endTime, summary)
