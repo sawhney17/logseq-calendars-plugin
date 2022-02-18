@@ -32,6 +32,7 @@ function rawParser(rawData) {
 	for (const dataValue in rawDataV2) {
 		eventsArray.push(rawDataV2[dataValue]); //simplifying results, credits to https://github.com/muness/obsidian-ics for this implementations
 	}
+  console.log(eventsArray)
 	return eventsArray;
 }
 
@@ -63,6 +64,7 @@ return templatex1
 
 function formatTime(rawTimeStamp, settings){
   let formattedTimeStamp = new Date(rawTimeStamp)
+  console.log(formattedTimeStamp)
   let initialHours = formattedTimeStamp.getHours()
   let hours;
   if (initialHours == 0){
@@ -70,14 +72,17 @@ function formatTime(rawTimeStamp, settings){
   }
   else {
     hours = initialHours
+    if (formattedTimeStamp.getHours() < 10){
+      hours = "0" + formattedTimeStamp.getHours()
+    }
   }
-  let formattedTime
+  var formattedTime
   if (formattedTimeStamp.getMinutes() <10){
     formattedTime = hours + ":" + "0"+(formattedTimeStamp.getMinutes())
   }
-  else{formattedTime = hours + ":" + (formattedTimeStamp.getMinutes())
+  else{
+    formattedTime = hours + ":" + (formattedTimeStamp.getMinutes())
 }
-  
   if (typeof settings.timeFormat == "undefined" || settings.timeFormat == 12){
     return new Date('1970-01-01T' + formattedTime + 'Z')
     .toLocaleTimeString('en-US',
@@ -99,6 +104,7 @@ async function insertJournalBlocks(data, preferredDateFormat:string, calendarNam
   let startBlock = await logseq.Editor.insertBlock(pageID.name, calendarName, {sibling:true, isPageBlock:true})
   for (const dataKey in data){
     let description = data[dataKey]["description"] //Parsing result from rawParser into usable data for templateFormatter
+    
     let formattedStart = new Date(data[dataKey]["start"])
     let startDate = getDateForPageWithoutBrackets(formattedStart, preferredDateFormat)
     let startTime = formatTime(formattedStart, settings)
@@ -113,7 +119,7 @@ async function insertJournalBlocks(data, preferredDateFormat:string, calendarNam
     }
     // using user provided template
       let headerString = templateFormatter(settings.template, description, startDate, startTime, endTime, summary, location)
-      if (startDate == emptyToday){
+      if (startDate.toLowerCase() == emptyToday.toLowerCase()){
     var currentBlock = await logseq.Editor.insertBlock(startBlock.uuid, `${headerString}`, {sibling:false})
     if (settings.templateLine2 != ""){
     let SecondTemplateLine = templateFormatter(settings.templateLine2, description, startDate, startTime, endTime, summary, location)
