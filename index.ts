@@ -80,6 +80,7 @@ async function insertJournalBlocks(data, preferredDateFormat:string, calendarNam
     let endTime = formatTime(data[dataKey]["end"], settings)
     let summary = data[dataKey]["summary"]
     // using user provided template
+    console.log(`Current Date: ${emptyToday}`)
       let headerString = templateFormatter(settings.template, description, startDate, startTime, endTime, summary)
       if (startDate == emptyToday){
     var currentBlock = await logseq.Editor.insertBlock(startBlock.uuid, `${headerString}`, {sibling:false})
