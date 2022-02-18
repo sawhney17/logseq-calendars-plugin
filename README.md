@@ -19,7 +19,7 @@ A plugin that allows you to import calendar events from GCal, iCloud, Outlook an
 {
   "disabled": false,
   "template": "{Start} - {End}: {Title}", 
-  "templateLine2": "{Description}", 
+  "templateLine2": "{Description}, Location: {Location}", 
   "accounts": {
     "Google Calendar": [
       "https://calendar.google.com/calendar/ical/rao6fvrrsq6mdorf9n30fs6mk4%40group.calendar.google.com/private-18ccd424400ef24c5d343ec93b289590/basic.ics"
@@ -79,6 +79,7 @@ A plugin that allows you to import calendar events from GCal, iCloud, Outlook an
     -  `{Start}`
     -  `{End}`
     -  `{Date}`
+    -  `{Location}`
 - Templates are the format by which the events are inserted
     -  You can define templates in settings
 - Difference between `template` and `templateline2`
