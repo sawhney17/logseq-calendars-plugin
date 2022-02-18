@@ -1,14 +1,31 @@
 import '@logseq/libs';
-import { safetyPathNormalize } from '@logseq/libs/dist/helpers';
 import { PageEntity } from '@logseq/libs/dist/LSPlugin.user';
 const ical = require('node-ical');
 const axios = require('axios');
 import { getDateForPage, getDateForPageWithoutBrackets} from 'logseq-dateutils';
-import { start } from 'repl';
 
-
-let calendarName = "Gcal"
-async function rawParser(rawData) {
+async function findDate(preferredDateFormat){
+const hello = 1
+  if (await logseq.Editor.getCurrentPage()!=null){
+    if ((await logseq.Editor.getCurrentPage())['journal?'] == false){
+      // console.log(await logseq.Editor.getCurrentPage()['journal?'])
+    const date = getDateForPageWithoutBrackets(new Date(), preferredDateFormat)
+    logseq.App.showMsg("Filtering Calendar Items for " + date)
+    // insertJournalBlocks(hello, preferredDateFormat, calendarName, settings, date)
+    return date
+    }
+    else {
+      // console.log(await logseq.Editor.getCurrentPage()['journal?'])
+      const date = (await logseq.Editor.getCurrentPage()).name
+      logseq.App.showMsg(`Filtering Calendar Items for ${date}`)
+      return date
+    }
+  }
+  else{
+    return getDateForPageWithoutBrackets(new Date(), preferredDateFormat)
+  }
+}
+function rawParser(rawData) {
   logseq.App.showMsg("Parsing Calendar Items")
 	var eventsArray = []
   var rawDataV2 = ical.parseICS(rawData)
@@ -33,7 +50,6 @@ function templateFormatter(template, description = "No Description", date = "No 
   else{
     properLocation = location
   }
-  console.log(location)
   let subsitutions = {"{Description}": properDescription, "{Date}" :date, "{Start}": start, "{End}": end, "{Title}":title, "{Location}":properLocation}
 var templatex1 = template
 
@@ -73,11 +89,12 @@ else{
   return formattedTime}
 }
 
-async function insertJournalBlocks(data, preferredDateFormat:string, calendarName, settings){
-  let emptyToday = (getDateForPageWithoutBrackets(new Date(), preferredDateFormat))
+async function insertJournalBlocks(data, preferredDateFormat:string, calendarName, settings, emptyToday){
+  // let emptyToday = (getDateForPageWithoutBrackets(new Date(), preferredDateFormat))
+  console.log(`Current Date: ${emptyToday}`)
   let pageID: PageEntity = await logseq.Editor.createPage(emptyToday, {createFirstBlock: true})
   // logseq.App.pushState('page', { name: pageID.name })
-  let pageBlocks = await logseq.Editor.getPageBlocksTree(pageID.name)
+  // let pageBlocks = await logseq.Editor.getPageBlocksTree(pageID.name)
   // let footerBlock = pageBlocks[pageBlocks.length -1]
   let startBlock = await logseq.Editor.insertBlock(pageID.name, calendarName, {sibling:true, isPageBlock:true})
   for (const dataKey in data){
@@ -95,7 +112,6 @@ async function insertJournalBlocks(data, preferredDateFormat:string, calendarNam
       summary = data[dataKey]["summary"]
     }
     // using user provided template
-    console.log(`Current Date: ${emptyToday}`)
       let headerString = templateFormatter(settings.template, description, startDate, startTime, endTime, summary, location)
       if (startDate == emptyToday){
     var currentBlock = await logseq.Editor.insertBlock(startBlock.uuid, `${headerString}`, {sibling:false})
@@ -117,8 +133,20 @@ async function openCalendar2 (calendarName, url, settings) {
   logseq.App.showMsg("Fetching Calendar Items")
   let response2 = await axios.get(url)
   var hello = await rawParser(response2.data)
-  insertJournalBlocks(hello, preferredDateFormat, calendarName, settings)
-}
+  // console.log("inserting")
+  // if (await (await logseq.Editor.getCurrentPage())['journal?'] == false){
+  // const date = getDateForPageWithoutBrackets(new Date(), preferredDateFormat)
+  // logseq.App.showMsg("Fetching Calendar Items")
+  // insertJournalBlocks(hello, preferredDateFormat, calendarName, settings, date)
+  // }
+  // else{
+  //   const date = (await logseq.Editor.getCurrentPage()).name
+  //   logseq.App.showMsg("Fetching Calendar Items")
+    
+  // }
+  const date = await findDate(preferredDateFormat)
+  insertJournalBlocks(hello, preferredDateFormat, calendarName, settings, date)
+  }
   catch(err){
     if (`${err}` == `Error: Request failed with status code 404`){
       logseq.App.showMsg("Calendar not found: Check your URL")

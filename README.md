@@ -9,7 +9,9 @@ A plugin that allows you to import calendar events from GCal, iCloud, Outlook an
     1. Use the command pallet via `mod+shift+p` and select a specific calendar to import
     2. Use the keyboard shortcut you defined in the settings to import that specific calendar
     3. Click the icon in the toolbar to import **all** calendars to daily note page 
-
+- Import events from past days
+    - When you are on either a non journal page, the home page or the current daily note, Logseq will import the current days events to the current days daily note
+    - When you are in a journal page for a different day, that dates events will be added to that dates daily note page (How cool!)
 ## Setup
 1. Get the ics link from each calendar provider using the below steps
 2. In Logseq, navigate to the entry in the plugins list for "Logseq Calendar Plugins
