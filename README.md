@@ -16,23 +16,8 @@ A plugin that allows you to import calendar events from GCal, iCloud, Outlook an
 1. Get the ics link from each calendar provider using the below steps
 2. In Logseq, navigate to the entry in the plugins list for "Logseq Calendar Plugins
 3. Click the gear and then "Open Settings"
-4. In settings, enter the following: 
-```json
-{
-  "disabled": false,
-  "template": "{Start} - {End}: {Title}", 
-  "templateLine2": "{Description}, Location: {Location}", 
-  "accounts": {
-    "Google Calendar": [
-      "https://calendar.google.com/calendar/ical/rao6fvrrsq6mdorf9n30fs6mk4%40group.calendar.google.com/private-18ccd424400ef24c5d343ec93b289590/basic.ics"
-    ],
-    "iCloud": [ 
-      "https://p54-caldav.icloud.com/published/2/MTcyOTMzMjIwNTAxNzI5M-ibrzX3UhprTcakzWiFfAyvzHuJSIuassVxcCUrtpJD"
-    ]
-  },
-  "timeFormat": 12
-}
-```
+4. Make sure you are at least on version 0.6.0 of logseq 
+5. Open plugin settings by clicking the edit settings button
 - `disabled` is required and is defined by logseq itself, you don't need to do anything here
 - `template` is the text that will go on the parent block(more on the syntax below)
     - Underneath the block titled the calendar name, you will see blocks in this format
