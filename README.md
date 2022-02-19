@@ -18,15 +18,13 @@ A plugin that allows you to import calendar events from GCal, iCloud, Outlook an
 3. Click the gear and then "Open Settings"
 4. Make sure you are at least on version 0.6.0 of logseq 
 5. Open plugin settings by clicking the edit settings button
+- <img width="1418" alt="Screen Shot 2022-02-19 at 11 40 15 AM" src="https://user-images.githubusercontent.com/80150109/154791790-13517b4f-d8c5-4683-afa4-2d74c73648f7.png">
+6. Set templates, timeformat, 
 - `disabled` is required and is defined by logseq itself, you don't need to do anything here
 - `template` is the text that will go on the parent block(more on the syntax below)
     - Underneath the block titled the calendar name, you will see blocks in this format
 - `templateLine2` is a block indented after `template`
-- `accounts` are defined in the format `"AccountName": ["IcsUrl", "Shortcut"]`
-    - You can add more accounts, just seperate them by `,`
-    - `AccountName` can be whatever you want
-    - `IcsUrl` follow [next step](#getting-the-ics-url) to get the url
-    - (optional) `Shortcut`
+- `accounts` are defined by just entering the iCAL and your desired title for the calendar. You can have up to three calendars. The first is mandatory but the others can be left blank to not be included while calling the fetch method. If you don't want a calendar to show up, leave either the title or the URL blank
 - `timeFormat` can be 12 or 24. The choice is regarding whether you want 24 hours time(19:00) or 12 hour time. (7:00 pm)
 
 ## Getting the ICS URL 
