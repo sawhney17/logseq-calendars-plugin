@@ -4,6 +4,7 @@
 
 A plugin that allows you to import calendar events from GCal, iCloud, Outlook and web based subscriptions in the iCal format. This appends all of the events scheduled for the current day to that days daily note page. 
 
+>Important! Version 2.0 requires Logseq to be at version 0.6.0 in order to work properly
 ## Usage
 - Three ways to import events
     1. Use the command pallet via `mod+shift+p` and select a specific calendar to import
