@@ -4,7 +4,7 @@
 
 A plugin that allows you to import calendar events from GCal, iCloud, Outlook and web based subscriptions in the iCal format. This appends all of the events scheduled for the current day to that days daily note page. 
 
->Important! Version 2.0 requires Logseq to be at version 0.6.0 in order to work properly
+>Important! Version 2.0 requires Logseq to be at version 0.6.0 in order to work properly with a GUI. You can still configure settings manually. 
 ## Usage
 - Three ways to import events
     1. Use the command pallet via `mod+shift+p` and select a specific calendar to import
@@ -28,6 +28,28 @@ A plugin that allows you to import calendar events from GCal, iCloud, Outlook an
 - `accounts` are defined by just entering the iCAL and your desired title for the calendar. You can have up to three calendars. The first is mandatory but the others can be left blank to not be included while calling the fetch method. If you don't want a calendar to show up, leave either the title or the URL blank
 - `timeFormat` can be 12 or 24. The choice is regarding whether you want 24 hours time(19:00) or 12 hour time. (7:00 pm)
 
+## For older versions: 0.5.9 and below:
+
+Breaking Change to the logseq calendars plugin. It now uses the new beautiful native settings GUI in logseq released in version 0.6.0
+
+You will have to insert all calendars again. You should probably also delete the existing settings file and start fresh. Release also requires logseq version 0.6.0 to be installed to access the GUI. 
+
+If you want to use it with an older version of logseq, change your settings file to follow this format: 
+
+```json
+{
+  "template": "{Start} - {End}: {Title}",
+  "templateLine2": "{Description} at {Location}",
+  "calendar1Name": "Google Calendar",
+  "calendar1URL": "https://calendar.google.com/calendar/ical/rao6fvrrsq6mdorf9n30fs6mk4%40group.calendar.google.com/private-18ccd424400ef24c5d343ec93b289590/basic.ics",
+  "calendar2Name": "",
+  "calendar2URL": "",
+  "calendar3Name": "",
+  "calendar3URL": "",
+  "disabled": false,
+  "timeFormat": "12 hour time"
+}
+```
 ## Getting the ICS URL 
 ### Google Calendar
 1. In the website, go to your calendar
