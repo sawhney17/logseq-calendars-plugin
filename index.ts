@@ -4,6 +4,7 @@ import ical from 'node-ical';
 import axios from 'axios';
 import { getDateForPage, getDateForPageWithoutBrackets} from 'logseq-dateutils';
 
+const md = require('markdown-it')().use(require('markdown-it-mark'));
 
 //If calendar 2 name AND URL is found, push to accounts
 
@@ -75,11 +76,11 @@ const settingsTemplate = [{
 logseq.useSettingsSchema(settingsTemplate)
 
 
-function sortDate(data){
-return data.sort(function(a, b){return (Math.round(new Date(a.start).getTime()/1000)
-  - (Math.round(new Date(b.start).getTime()/1000)))}
-  )
-}
+// function sortDate(data){
+// return data.sort(function(a, b){return (Math.round(new Date(a.start).getTime()/1000)
+//   - (Math.round(new Date(b.start).getTime()/1000)))}
+//   )
+// }
 async function findDate(preferredDateFormat){
 const hello = 1
   if (await logseq.Editor.getCurrentPage()!=null){
@@ -109,8 +110,9 @@ function rawParser(rawData) {
 		eventsArray.push(rawDataV2[dataValue]); //simplifying results, credits to https://github.com/muness/obsidian-ics for this implementations
 	}
   console.log(eventsArray)
-  console.log(sortDate(eventsArray))
-	return sortDate(eventsArray);
+  // console.log(sortDate(eventsArray))
+	// return sortDate(eventsArray);
+  return eventsArray
 }
 
 function templateFormatter(template, description = "No Description", date = "No Date", start = "No Start", end = "No End", title = "No Title", location = "No Location"){
