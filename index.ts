@@ -4,7 +4,7 @@ import ical from 'node-ical';
 import axios from 'axios';
 import { getDateForPage, getDateForPageWithoutBrackets} from 'logseq-dateutils';
 
-const md = require('markdown-it')().use(require('markdown-it-mark'));
+// const md = require('markdown-it')().use(require('markdown-it-mark'));
 
 //If calendar 2 name AND URL is found, push to accounts
 
