@@ -1,5 +1,5 @@
 import '@logseq/libs';
-import { PageEntity } from '@logseq/libs/dist/LSPlugin.user';
+import { PageEntity, SettingSchemaDesc } from '@logseq/libs/dist/LSPlugin.user';
 import ical from 'node-ical';
 import axios from 'axios';
 import { getDateForPage, getDateForPageWithoutBrackets} from 'logseq-dateutils';
@@ -8,7 +8,7 @@ import { getDateForPage, getDateForPageWithoutBrackets} from 'logseq-dateutils';
 
 //If calendar 2 name AND URL is found, push to accounts
 
-const settingsTemplate = [{
+const settingsTemplate:SettingSchemaDesc[] = [{
   key: "template",
   type: 'string',
   default: "{Start} - {End}: {Title}",
@@ -67,12 +67,12 @@ const settingsTemplate = [{
 {
   key: "timeFormat",
   type: 'enum',
-  // default: ["12 hour time", "24 hour time"],
+  default: ["12 hour time", "24 hour time"],
   title: "Select between 12 and 24 hour time",
   description: "Select between 12 and 24 hour time. This option will be followed whenever you call {end} or {start} in the template.",
   enumChoices: ["12 hour time", "24 hour time"],
   enumPicker: 'select'
-},] 
+}] 
 logseq.useSettingsSchema(settingsTemplate)
 
 
@@ -199,10 +199,10 @@ async function insertJournalBlocks(data, preferredDateFormat:string, calendarNam
     // using user provided template
       let headerString = templateFormatter(settings.template, description, startDate, startTime, endTime, summary, location)
       if (startDate.toLowerCase() == emptyToday.toLowerCase()){
-    var currentBlock = await logseq.Editor.insertBlock(startBlock.uuid, `${headerString}`, {sibling:false})
+    var currentBlock = await logseq.Editor.insertBlock(startBlock.uuid, `${headerString.replaceAll("\\n", "\n")}`, {sibling:false})
     if (settings.templateLine2 != ""){
     let SecondTemplateLine = templateFormatter(settings.templateLine2, description, startDate, startTime, endTime, summary, location)
-    await logseq.Editor.insertBlock(currentBlock.uuid, `${SecondTemplateLine}`, {sibling:false})}}
+    await logseq.Editor.insertBlock(currentBlock.uuid, `${SecondTemplateLine.replaceAll("\\n", "\n")}`, {sibling:false})}}
   }
   let updatedBlock = await logseq.Editor.getBlock(startBlock.uuid, {includeChildren: true})
   if ( updatedBlock.children.length == 0){
