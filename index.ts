@@ -190,12 +190,12 @@ async function insertJournalBlocks(data, preferredDateFormat:string, calendarNam
     let endTime = formatTime(data[dataKey]["end"], settings)
     let location = data[dataKey]["location"]
     let summary
-    if (data[dataKey]["summary"]["val"]){
-      summary = data[dataKey]["summary"]["val"]
-    }
-    else{
+    // if (data[dataKey]["summary"]["val"]){
+    //   summary = data[dataKey]["summary"]["val"]
+    // }
+    // else{
       summary = data[dataKey]["summary"]
-    }
+    // }
     // using user provided template
       let headerString = templateFormatter(settings.template, description, startDate, startTime, endTime, summary, location)
       if (startDate.toLowerCase() == emptyToday.toLowerCase()){
