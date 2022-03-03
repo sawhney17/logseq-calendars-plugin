@@ -23,6 +23,15 @@ const settingsTemplate:SettingSchemaDesc[] = [{
   description: "Optionally insert a second block indented under the event. Leave blank if you don't want to insert a second blockYou can use placeholder variables to customize the block. The following variables are available: {Description}, {Date}, {Start}, {End}, {Title}, {Location}.",
 }, 
 {
+  key: "timeFormat",
+  type: 'enum',
+  default: ["12 hour time", "24 hour time"],
+  title: "Select between 12 and 24 hour time",
+  description: "Select between 12 and 24 hour time. This option will be followed whenever you call {end} or {start} in the template.",
+  enumChoices: ["12 hour time", "24 hour time"],
+  enumPicker: 'select'
+},
+{
   key: "calendar1Name",
   type: 'string',
   default: "Calendar 1",
@@ -65,22 +74,41 @@ const settingsTemplate:SettingSchemaDesc[] = [{
   description: "Optional: Leave blank if you don't want this calendar to be inserted",
 }, 
 {
-  key: "timeFormat",
-  type: 'enum',
-  default: ["12 hour time", "24 hour time"],
-  title: "Select between 12 and 24 hour time",
-  description: "Select between 12 and 24 hour time. This option will be followed whenever you call {end} or {start} in the template.",
-  enumChoices: ["12 hour time", "24 hour time"],
-  enumPicker: 'select'
+  key: "calendar4Name",
+  type: 'string',
+  default: "",
+  title: "Optional: What would you like to name the calendar?",
+  description: "Optional: Leave blank if you don't want this calendar to be inserted",
+}, 
+{
+  key: "calendar4URL",
+  type: 'string',
+  default: "",
+  title: "Optional: enter the iCAL URL for calendar 4",
+  description: "Optional: Leave blank if you don't want this calendar to be inserted",
+}, 
+{
+  key: "calendar5Name",
+  type: 'string',
+  default: "",
+  title: "Optional: What would you like to name the calendar?",
+  description: "Optional: Leave blank if you don't want this calendar to be inserted",
+}, 
+{
+  key: "calendar5URL",
+  type: 'string',
+  default: "",
+  title: "Optional: enter the iCAL URL for calendar 3",
+  description: "Optional: Leave blank if you don't want this calendar to be inserted",
 }] 
 logseq.useSettingsSchema(settingsTemplate)
 
 
-// function sortDate(data){
-// return data.sort(function(a, b){return (Math.round(new Date(a.start).getTime()/1000)
-//   - (Math.round(new Date(b.start).getTime()/1000)))}
-//   )
-// }
+function sortDate(data){
+return data.sort(function(a, b){return (Math.round(new Date(a.start).getTime()/1000)
+  - (Math.round(new Date(b.start).getTime()/1000)))}
+  )
+}
 async function findDate(preferredDateFormat){
 const hello = 1
   if (await logseq.Editor.getCurrentPage()!=null){
@@ -111,8 +139,8 @@ function rawParser(rawData) {
 	}
   console.log(eventsArray)
   // console.log(sortDate(eventsArray))
-	// return sortDate(eventsArray);
-  return eventsArray
+	return sortDate(eventsArray);
+  // return eventsArray
 }
 
 function templateFormatter(template, description = "No Description", date = "No Date", start = "No Start", end = "No End", title = "No Title", location = "No Location"){
@@ -253,6 +281,12 @@ async function main () {
     if (initialSettings.calendar1Name != "" && initialSettings.calendar1URL != ""){
       accounts2[initialSettings.calendar1Name] = initialSettings.calendar1URL
     }
+    if (initialSettings.calendar4Name != "" && initialSettings.calendar4URL != ""){
+      accounts2[initialSettings.calendar4Name] = initialSettings.calendar4URL
+    }
+    if (initialSettings.calendar5Name != "" && initialSettings.calendar5URL != ""){
+      accounts2[initialSettings.calendar5Name] = initialSettings.calendar5URL
+    }
     // logseq.updateSettings({"accounts": {}})
     // logseq.updateSettings({"accounts": accounts2})
   const userConfigs = await logseq.App.getUserConfigs();
@@ -272,6 +306,12 @@ if (initialSettings.calendar2Name != "" && initialSettings.calendar2URL != ""){
   }
   if (initialSettings.calendar1Name != "" && initialSettings.calendar1URL != ""){
     accounts2[initialSettings.calendar1Name] = [initialSettings.calendar1URL]
+  }
+  if (initialSettings.calendar4Name != "" && initialSettings.calendar4URL != ""){
+    accounts2[initialSettings.calendar4Name] = initialSettings.calendar4URL
+  }
+  if (initialSettings.calendar5Name != "" && initialSettings.calendar5URL != ""){
+    accounts2[initialSettings.calendar5Name] = initialSettings.calendar5URL
   }
    initialSettings = await logseq.settings
 // logseq.updateSettings({"accounts": {}})
@@ -294,6 +334,12 @@ if (initialSettings.calendar3Name != "" && initialSettings.calendar3URL != ""){
 }
 if (initialSettings.calendar1Name != "" && initialSettings.calendar1URL != ""){
  accounts2[initialSettings.calendar1Name] = [initialSettings.calendar1URL]
+}
+if (initialSettings.calendar4Name != "" && initialSettings.calendar4URL != ""){
+  accounts2[initialSettings.calendar4Name] = initialSettings.calendar4URL
+}
+if (initialSettings.calendar5Name != "" && initialSettings.calendar5URL != ""){
+  accounts2[initialSettings.calendar5Name] = initialSettings.calendar5URL
 }
   let accountSetting  = accounts2[accountName]
     logseq.App.registerCommandPalette(
