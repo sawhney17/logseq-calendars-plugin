@@ -76,8 +76,8 @@ If you want to use it with an older version of logseq, change your settings file
 3. Open the email you would've received. 
 4. At the bottom of the email, there will be a response in this form
     - <img width="481" alt="Screen Shot 2022-01-28 at 1 33 48 AM" src="https://user-images.githubusercontent.com/80150109/151447351-37743cdc-337d-47f8-8628-069777f3c666.png">
-5. Copy the link that the text `this link` points to. 
-6. This is the linkk you need
+5. Copy the link that the text `this URL` points to. 
+6. This is the link you need
 
 ## Custom templates
 
