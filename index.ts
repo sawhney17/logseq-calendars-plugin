@@ -238,6 +238,7 @@ async function insertJournalBlocks(data, preferredDateFormat: string, calendarNa
         }
       }
     } catch (error) {
+      console.log(data[dataKey])
       console.log("error")
       console.log(error)
     }
