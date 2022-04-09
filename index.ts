@@ -361,7 +361,7 @@ async function main() {
     key: 'open-calendar2',
     template: `
       <a class="button" data-on-click="openCalendar2">
-        <i class="ti ti-calendar"></i>
+        <i class="ti ti-notebook"></i>
       </a>
     `,
   })
