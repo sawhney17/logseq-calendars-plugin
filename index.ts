@@ -398,37 +398,42 @@ async function openCalendar2(calendarName, url, settings) {
 async function main() {
   let initialSettings = logseq.settings!;
   let accounts2 = {};
-  if (
-    initialSettings.calendar2Name != "" &&
-    initialSettings.calendar2URL != ""
-  ) {
-    accounts2[initialSettings.calendar2Name] = initialSettings.calendar2URL;
+  if (logseq.settings?.useJSON) {
+    accounts2 = logseq.settings.accountsDetails
   }
-  if (
-    initialSettings.calendar3Name != "" &&
-    initialSettings.calendar3URL != ""
-  ) {
-    accounts2[initialSettings.calendar3Name] = initialSettings.calendar3URL;
+  else {
+    if (
+      initialSettings.calendar2Name != "" &&
+      initialSettings.calendar2URL != ""
+    ) {
+      accounts2[initialSettings.calendar2Name] = initialSettings.calendar2URL;
+    }
+    if (
+      initialSettings.calendar3Name != "" &&
+      initialSettings.calendar3URL != ""
+    ) {
+      accounts2[initialSettings.calendar3Name] = initialSettings.calendar3URL;
+    }
+    if (
+      initialSettings.calendar1Name != "" &&
+      initialSettings.calendar1URL != ""
+    ) {
+      accounts2[initialSettings.calendar1Name] = initialSettings.calendar1URL;
+    }
+    if (
+      initialSettings.calendar4Name != "" &&
+      initialSettings.calendar4URL != ""
+    ) {
+      accounts2[initialSettings.calendar4Name] = initialSettings.calendar4URL;
+    }
+    if (
+      initialSettings.calendar5Name != "" &&
+      initialSettings.calendar5URL != ""
+    ) {
+      accounts2[initialSettings.calendar5Name] = initialSettings.calendar5URL;
+    }
+    logseq.updateSettings({ accountsDetails: accounts2 });
   }
-  if (
-    initialSettings.calendar1Name != "" &&
-    initialSettings.calendar1URL != ""
-  ) {
-    accounts2[initialSettings.calendar1Name] = initialSettings.calendar1URL;
-  }
-  if (
-    initialSettings.calendar4Name != "" &&
-    initialSettings.calendar4URL != ""
-  ) {
-    accounts2[initialSettings.calendar4Name] = initialSettings.calendar4URL;
-  }
-  if (
-    initialSettings.calendar5Name != "" &&
-    initialSettings.calendar5URL != ""
-  ) {
-    accounts2[initialSettings.calendar5Name] = initialSettings.calendar5URL;
-  }
-  logseq.updateSettings({"accountsDetails": accounts2})
   logseq.provideModel({
     async openCalendar2() {
       let initialSettings = await logseq.settings;
