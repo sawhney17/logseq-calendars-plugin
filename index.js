@@ -236,7 +236,7 @@ function formatTime(rawTimeStamp, settings) {
 async function insertJournalBlocks(data, preferredDateFormat: string, calendarName, settings, emptyToday) {
   // let emptyToday = (getDateForPageWithoutBrackets(new Date(), preferredDateFormat))
   console.log(`Current Date: ${emptyToday}`)
-  let pageID: PageEntity = await logseq.Editor.createPage(emptyToday, { createFirstBlock: true })
+  let pageID = await logseq.Editor.createPage(emptyToday, { createFirstBlock: true })
   // logseq.App.pushState('page', { name: pageID.name })
   // let pageBlocks = await logseq.Editor.getPageBlocksTree(pageID.name)
   // let footerBlock = pageBlocks[pageBlocks.length -1]
