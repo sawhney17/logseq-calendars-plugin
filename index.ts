@@ -187,6 +187,7 @@ function rawParser(rawData) {
           // tzid present (calculate offset from recurrence start)
           const dateTimezone = moment.tz.zone("UTC");
           const localTimezone = moment.tz.guess();
+          
           const tz =
             event.rrule.origOptions.tzid === localTimezone
               ? event.rrule.origOptions.tzid
@@ -194,7 +195,10 @@ function rawParser(rawData) {
           const timezone = moment.tz.zone(tz);
           const offset =
             timezone.utcOffset(date) - dateTimezone.utcOffset(date);
-          newDate = moment(date).add(offset, "minutes").toDate();
+          // newDate = moment(date).add(offset, "minutes").toDate();
+          // console.log(offset)
+          newDate = date
+          //FIXME: this is a hack to get around the fact that the offset is not being calculated correctly
         } else {
           // tzid not present (calculate offset from original start)
           newDate = new Date(
@@ -445,36 +449,7 @@ async function main() {
 
   for (const accountName in accounts2) {
     let initialSettings = await logseq.settings!;
-    // if (
-    //   initialSettings.calendar2Name != "" &&
-    //   initialSettings.calendar2URL != ""
-    // ) {
-    //   accounts2[initialSettings.calendar2Name] = [initialSettings.calendar2URL];
-    // }
-    // if (
-    //   initialSettings.calendar3Name != "" &&
-    //   initialSettings.calendar3URL != ""
-    // ) {
-    //   accounts2[initialSettings.calendar3Name] = [initialSettings.calendar3URL];
-    // }
-    // if (
-    //   initialSettings.calendar1Name != "" &&
-    //   initialSettings.calendar1URL != ""
-    // ) {
-    //   accounts2[initialSettings.calendar1Name] = [initialSettings.calendar1URL];
-    // }
-    // if (
-    //   initialSettings.calendar4Name != "" &&
-    //   initialSettings.calendar4URL != ""
-    // ) {
-    //   accounts2[initialSettings.calendar4Name] = initialSettings.calendar4URL;
-    // }
-    // if (
-    //   initialSettings.calendar5Name != "" &&
-    //   initialSettings.calendar5URL != ""
-    // ) {
-    //   accounts2[initialSettings.calendar5Name] = initialSettings.calendar5URL;
-    // }
+   
     let accountSetting = accounts2[accountName];
     logseq.App.registerCommandPalette(
       {
