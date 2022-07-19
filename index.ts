@@ -8,6 +8,7 @@ import {
 } from "logseq-dateutils";
 import moment from "moment-timezone";
 
+let mainBlockUUID = ""
 // const md = require('markdown-it')().use(require('markdown-it-mark'));
 
 const settingsTemplate: SettingSchemaDesc[] = [
@@ -26,6 +27,13 @@ const settingsTemplate: SettingSchemaDesc[] = [
     title: "Use JSON to store calendar data",
     description:
       "If you require more than 5 calendars, select this option so that you can manually define calendars via json",
+  },
+  {
+    key: "IndentCommonBlock",
+    type: "boolean",
+    default: false,
+    title: "Indent all events under the same block",
+    description: "If you want to indent all events under the same block, irrespective of the calendar they belong to",
   },
   {
     key: "templateLine2",
@@ -301,7 +309,8 @@ async function insertJournalBlocks(
   preferredDateFormat: string,
   calendarName,
   settings,
-  emptyToday
+  emptyToday,
+  useCommonBlock = false
 ) {
   // let emptyToday = (getDateForPageWithoutBrackets(new Date(), preferredDateFormat))
   console.log(`Current Date: ${emptyToday}`);
@@ -457,7 +466,7 @@ async function main() {
         label: `Syncing with ${accountName}`,
       },
       () => {
-        openCalendar2(accountName, accountSetting[0], initialSettings);
+        openCalendar2(accountName, accountSetting, initialSettings);
       }
     );
   }
