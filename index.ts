@@ -7,6 +7,7 @@ import {
   getDateForPageWithoutBrackets,
 } from "logseq-dateutils";
 import moment from "moment-timezone";
+import urlRegexSafe from 'url-regex-safe';
 
 let mainBlockUUID = ""
 // const md = require('markdown-it')().use(require('markdown-it-mark'));
@@ -18,7 +19,7 @@ const settingsTemplate: SettingSchemaDesc[] = [
     default: "{Start} - {End}: {Title}",
     title: "Customizing the Event's Insertion",
     description:
-      "The first block that is inserted right under the calendar name for each event. You can use placeholder variables to customize the block. The following variables are available: {Description}, {Date}, {Start}, {End}, {Title}, {Location}",
+      "The first block that is inserted right under the calendar name for each event. You can use placeholder variables to customize the block. The following variables are available: {Description}, {Date}, {Start}, {End}, {Title}, {Location}, {RawLocation}",
   },
   {
     key: "useJSON",
@@ -41,7 +42,7 @@ const settingsTemplate: SettingSchemaDesc[] = [
     default: "{Description}",
     title: "Optional: A second block under the event",
     description:
-      "Optionally insert a second block indented under the event. Leave blank if you don't want to insert a second blockYou can use placeholder variables to customize the block. The following variables are available: {Description}, {Date}, {Start}, {End}, {Title}, {Location}.",
+      "Optionally insert a second block indented under the event. Leave blank if you don't want to insert a second blockYou can use placeholder variables to customize the block. The following variables are available: {Description}, {Date}, {Start}, {End}, {Title}, {Location}, {RawLocation}.",
   },
   {
     key: "timeFormat",
@@ -231,6 +232,25 @@ function rawParser(rawData) {
   return sortDate(eventsArray);
 }
 
+function parseLocation(rawLocation){
+  const matches = rawLocation.match(urlRegexSafe());
+  var parsed = rawLocation;
+  var linkDesc;
+  for (const match of matches) {
+    try{
+      var url = new URL(match);
+      linkDesc = url.hostname + '/...';
+    } catch (e){
+      //this really shouldn't happen
+      //but if the regex returns a url that URL doesn't like, just use the whole link
+      linkDesc = match;
+    }
+    //console.log('match', match);
+    parsed = parsed.replace(match, '[' + linkDesc + '](' + match + ')');
+  }
+  return parsed;
+}
+
 function templateFormatter(
   template,
   description = "No Description",
@@ -242,6 +262,7 @@ function templateFormatter(
 ) {
   let properDescription;
   let properLocation;
+  let parsedLocation;
   if (description == "") {
     properDescription = "No Description";
   } else {
@@ -252,13 +273,15 @@ function templateFormatter(
   } else {
     properLocation = location;
   }
+  parsedLocation = parseLocation(properLocation);
   let subsitutions = {
     "{Description}": properDescription,
     "{Date}": date,
     "{Start}": start,
     "{End}": end,
     "{Title}": title,
-    "{Location}": properLocation,
+    "{RawLocation}": properLocation,
+    "{Location}": parsedLocation,
   };
   var templatex1 = template;
 

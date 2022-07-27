@@ -88,8 +88,10 @@ If you want to use it with an older version of logseq, change your settings file
     -  `{End}`
     -  `{Date}`
     -  `{Location}`
+    -  `{RawLocation}`
 - Templates are the format by which the events are inserted
     -  You can define templates in settings
+- `{Location}` will collapse URLs (e.g. for videoconferencing) into short clickable links by default (e.g. "https://videocall.example.com/j/123456789?pwd=abcdefghijklmnopqrstuvwxyz or Room 101" will be rendered as "videocall.example.com/... or Room 101"), while RawLocation will preserve the original text.
 - Difference between `template` and `templateline2`
 <img width="993" alt="Screen Shot 2022-01-28 at 3 05 54 PM" src="https://user-images.githubusercontent.com/80150109/151536767-c4ca96aa-a57c-4ee6-9c7b-ee36b3d448ce.png">
 
