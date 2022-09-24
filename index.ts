@@ -130,7 +130,7 @@ const settingsTemplate: SettingSchemaDesc[] = [
     key: "calendar5URL",
     type: "string",
     default: "",
-    title: "Optional: enter the iCAL URL for calendar 3",
+    title: "Optional: enter the iCAL URL for calendar 5",
     description:
       "Optional: Leave blank if you don't want this calendar to be inserted",
   },
