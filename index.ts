@@ -1,5 +1,5 @@
 import "@logseq/libs";
-import { PageEntity, SettingSchemaDesc } from "@logseq/libs/dist/LSPlugin.user";
+import { BlockEntity, PageEntity, SettingSchemaDesc } from "@logseq/libs/dist/LSPlugin.user";
 import ical from "node-ical";
 import axios from "axios";
 import {
@@ -296,7 +296,7 @@ function templateFormatter(
   return templatex1;
 }
 
-function formatTime(rawTimeStamp, settings) {
+async function formatTime(rawTimeStamp) {
   let formattedTimeStamp = new Date(rawTimeStamp);
   let initialHours = formattedTimeStamp.getHours();
   let hours;
@@ -315,8 +315,8 @@ function formatTime(rawTimeStamp, settings) {
     formattedTime = hours + ":" + formattedTimeStamp.getMinutes();
   }
   if (
-    typeof settings.timeFormat == "undefined" ||
-    settings.timeFormat == "12 hour time"
+    typeof logseq.settings?.timeFormat == "undefined" ||
+    logseq.settings?.timeFormat == "12 hour time"
   ) {
     return new Date("1970-01-01T" + formattedTime + "Z").toLocaleTimeString(
       "en-US",
@@ -331,7 +331,6 @@ async function insertJournalBlocks(
   data,
   preferredDateFormat: string,
   calendarName,
-  settings,
   emptyToday,
   useCommonBlock = false
 ) {
@@ -343,10 +342,10 @@ async function insertJournalBlocks(
   // logseq.App.pushState('page', { name: pageID.name })
   // let pageBlocks = await logseq.Editor.getPageBlocksTree(pageID.name)
   // let footerBlock = pageBlocks[pageBlocks.length -1]
-  let startBlock = await logseq.Editor.insertBlock(pageID.name, calendarName, {
+  let startBlock = (await logseq.Editor.insertBlock(pageID!.name, calendarName, {
     sibling: true,
     isPageBlock: true,
-  });
+  })) as BlockEntity;
   for (const dataKey in data) {
     try {
       let description = data[dataKey]["description"]; //Parsing result from rawParser into usable data for templateFormatter
@@ -355,15 +354,15 @@ async function insertJournalBlocks(
         formattedStart,
         preferredDateFormat
       );
-      let startTime = formatTime(formattedStart, settings);
-      let endTime = formatTime(data[dataKey]["end"], settings);
+      let startTime = await formatTime(formattedStart) ;
+      let endTime = await formatTime(data[dataKey]["end"]);
       let location = data[dataKey]["location"];
       let summary;
       summary = data[dataKey]["summary"];
       // }
       // using user provided template
       let headerString = templateFormatter(
-        settings.template,
+        logseq.settings?.template,
         description,
         startDate,
         startTime,
@@ -377,9 +376,9 @@ async function insertJournalBlocks(
           `${headerString.replaceAll("\\n", "\n")}`,
           { sibling: false }
         );
-        if (settings.templateLine2 != "") {
+        if (logseq.settings?.templateLine2 != "") {
           let SecondTemplateLine = templateFormatter(
-            settings.templateLine2,
+            logseq.settings?.templateLine2,
             description,
             startDate,
             startTime,
@@ -388,7 +387,7 @@ async function insertJournalBlocks(
             location
           );
           await logseq.Editor.insertBlock(
-            currentBlock.uuid,
+            currentBlock!.uuid,
             `${SecondTemplateLine.replaceAll("\\n", "\n")}`,
             { sibling: false }
           );
@@ -402,13 +401,13 @@ async function insertJournalBlocks(
   }
   let updatedBlock = await logseq.Editor.getBlock(startBlock.uuid, {
     includeChildren: true,
-  });
-  if (updatedBlock.children.length == 0) {
+  })
+  if (updatedBlock?.children?.length == 0) {
     logseq.Editor.removeBlock(startBlock.uuid);
     logseq.App.showMsg("No events for the day detected");
   }
 }
-async function openCalendar2(calendarName, url, settings) {
+async function openCalendar2(calendarName, url) {
   try {
     const userConfigs = await logseq.App.getUserConfigs();
     const preferredDateFormat = userConfigs.preferredDateFormat;
@@ -421,7 +420,6 @@ async function openCalendar2(calendarName, url, settings) {
       hello,
       preferredDateFormat,
       calendarName,
-      settings,
       date
     );
   } catch (err) {
@@ -432,55 +430,53 @@ async function openCalendar2(calendarName, url, settings) {
   }
 }
 async function main() {
-  let initialSettings = logseq.settings!;
+
   let accounts2 = {};
   if (logseq.settings?.useJSON) {
     accounts2 = logseq.settings.accountsDetails
   }
   else {
     if (
-      initialSettings.calendar2Name != "" &&
-      initialSettings.calendar2URL != ""
+      logseq.settings?.calendar2Name != "" &&
+      logseq.settings?.calendar2URL != ""
     ) {
-      accounts2[initialSettings.calendar2Name] = initialSettings.calendar2URL;
+      accounts2[logseq.settings?.calendar2Name] = logseq.settings?.calendar2URL;
     }
     if (
-      initialSettings.calendar3Name != "" &&
-      initialSettings.calendar3URL != ""
+      logseq.settings?.calendar3Name != "" &&
+      logseq.settings?.calendar3URL != ""
     ) {
-      accounts2[initialSettings.calendar3Name] = initialSettings.calendar3URL;
+      accounts2[logseq.settings?.calendar3Name] = logseq.settings?.calendar3URL;
     }
     if (
-      initialSettings.calendar1Name != "" &&
-      initialSettings.calendar1URL != ""
+      logseq.settings?.calendar1Name != "" &&
+      logseq.settings?.calendar1URL != ""
     ) {
-      accounts2[initialSettings.calendar1Name] = initialSettings.calendar1URL;
+      accounts2[logseq.settings?.calendar1Name] = logseq.settings?.calendar1URL;
     }
     if (
-      initialSettings.calendar4Name != "" &&
-      initialSettings.calendar4URL != ""
+      logseq.settings?.calendar4Name != "" &&
+      logseq.settings?.calendar4URL != ""
     ) {
-      accounts2[initialSettings.calendar4Name] = initialSettings.calendar4URL;
+      accounts2[logseq.settings?.calendar4Name] = logseq.settings?.calendar4URL;
     }
     if (
-      initialSettings.calendar5Name != "" &&
-      initialSettings.calendar5URL != ""
+      logseq.settings?.calendar5Name != "" &&
+      logseq.settings?.calendar5URL != ""
     ) {
-      accounts2[initialSettings.calendar5Name] = initialSettings.calendar5URL;
+      accounts2[logseq.settings?.calendar5Name] = logseq.settings?.calendar5URL;
     }
     logseq.updateSettings({ accountsDetails: accounts2 });
   }
   logseq.provideModel({
     async openCalendar2() {
-      let initialSettings = await logseq.settings;
       for (const accountName in accounts2) {
-        openCalendar2(accountName, accounts2[accountName], initialSettings);
+        openCalendar2(accountName, accounts2[accountName]);
       }
     },
   });
 
   for (const accountName in accounts2) {
-    let initialSettings = await logseq.settings!;
    
     let accountSetting = accounts2[accountName];
     logseq.App.registerCommandPalette(
@@ -489,7 +485,7 @@ async function main() {
         label: `Syncing with ${accountName}`,
       },
       () => {
-        openCalendar2(accountName, accountSetting, initialSettings);
+        openCalendar2(accountName, accountSetting);
       }
     );
   }
