@@ -176,9 +176,10 @@ function rawParser(rawData) {
       //@ts-expect-error
       eventsArray.push(rawDataV2[dataValue]); //simplifying results, credits to https://github.com/muness/obsidian-ics for this implementations
     } else {
+      const currentYear = new Date().getFullYear()
       const dates = event.rrule.between(
         new Date(2021, 0, 1, 0, 0, 0, 0),
-        new Date(2023, 11, 31, 0, 0, 0, 0)
+        new Date(currentYear, 11, 31, 0, 0, 0, 0)
       );
       console.log(dates);
       if (dates.length === 0) continue;
