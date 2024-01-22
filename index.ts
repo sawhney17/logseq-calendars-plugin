@@ -178,7 +178,7 @@ function rawParser(rawData) {
     } else {
       const dates = event.rrule.between(
         new Date(2021, 0, 1, 0, 0, 0, 0),
-        new Date(2023, 11, 31, 0, 0, 0, 0)
+        new Date(2024, 11, 31, 0, 0, 0, 0)
       );
       console.log(dates);
       if (dates.length === 0) continue;
