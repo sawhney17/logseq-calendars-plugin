@@ -231,8 +231,49 @@ function rawParser(rawData) {
         `${event.rrule.origOptions.dtstart} [${event.rrule.origOptions.tzid}]`
       );
 
+      // Normalize exdate to an array for easier checking
+      let exdateArray = [];
+      if (event.exdate) {
+        if (Array.isArray(event.exdate)) {
+          exdateArray = event.exdate;
+        } else if (typeof event.exdate === 'object') {
+          // exdate can be an object with date values
+          exdateArray = Object.values(event.exdate);
+        } else {
+          // Single date
+          exdateArray = [event.exdate];
+        }
+      }
+
       try {
         dates.forEach((date) => {
+          // Check if this date is in the exception list (EXDATE)
+          // Compare dates ignoring time components
+          const isExcluded = exdateArray.some((exdate) => {
+            const exd = new Date(exdate);
+            return (
+              exd.getFullYear() === date.getFullYear() &&
+              exd.getMonth() === date.getMonth() &&
+              exd.getDate() === date.getDate()
+            );
+          });
+
+          // Skip this occurrence if it's been excluded (rescheduled)
+          if (isExcluded) {
+            console.log(`Skipping excluded date for ${event.summary}: ${date.toISOString().split('T')[0]}`);
+            return;
+          }
+
+          // Check if this occurrence has been modified (rescheduled)
+          // The recurrences property contains modified instances keyed by YYYY-MM-DD
+          if (event.recurrences) {
+            const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+            if (event.recurrences[dateKey]) {
+              console.log(`Skipping original occurrence for ${event.summary} on ${dateKey} (has been rescheduled)`);
+              return;
+            }
+          }
+
           let newDate;
           let newEndDate;
           if (event.rrule.origOptions.tzid) {
@@ -286,6 +327,25 @@ function rawParser(rawData) {
       } catch (error) {
         console.error("Error processing recurring event:", event.summary, error);
         continue;
+      }
+
+      // Add rescheduled/modified instances from the recurrences property
+      if (event.recurrences) {
+        try {
+          for (const recKey in event.recurrences) {
+            const recEvent = event.recurrences[recKey];
+            // Each recurrence is a modified instance of the recurring event
+            // Add it to the events array with its rescheduled date/time
+            eventsArray.push({
+              ...recEvent,
+              // Preserve timezone info if available
+              timezone: event.rrule.origOptions.tzid
+            });
+            console.log(`Added rescheduled instance of ${event.summary}: ${recKey} -> ${new Date(recEvent.start).toISOString().split('T')[0]}`);
+          }
+        } catch (error) {
+          console.error("Error processing recurrence modifications:", event.summary, error);
+        }
       }
 
       console.log(
