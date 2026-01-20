@@ -233,6 +233,28 @@ function shouldFilterDeclinedEvent(event, userEmail) {
   return false;
 }
 
+function isCancelledEvent(event) {
+  // Check if event status is CANCELLED
+  // The status property may be a string or an object with val property
+  if (!event.status) {
+    return false;
+  }
+
+  // Handle both string format and object format from node-ical
+  const statusValue = typeof event.status === 'string'
+    ? event.status
+    : event.status.val || event.status;
+
+  const normalizedStatus = statusValue.toString().toUpperCase().trim();
+
+  if (normalizedStatus === 'CANCELLED') {
+    console.log(`Filtering cancelled event: ${event.summary}`);
+    return true;
+  }
+
+  return false;
+}
+
 async function findDate(preferredDateFormat) {
   if ((await logseq.Editor.getCurrentPage()) != null) {
     //@ts-expect-error
@@ -262,7 +284,8 @@ function rawParser(rawData) {
     const event = rawDataV2[dataValue];
     if (typeof event.rrule == "undefined") {
       //@ts-expect-error
-      if (!shouldFilterDeclinedEvent(event, logseq.settings?.userEmail)) {
+      if (!shouldFilterDeclinedEvent(event, logseq.settings?.userEmail) &&
+          !isCancelledEvent(event)) {
         eventsArray.push(rawDataV2[dataValue]); //simplifying results, credits to https://github.com/muness/obsidian-ics for this implementations
       }
     } else {
@@ -284,11 +307,16 @@ function rawParser(rawData) {
       // Normalize exdate to an array for easier checking
       let exdateArray = [];
       if (event.exdate) {
-        if (Array.isArray(event.exdate)) {
-          exdateArray = event.exdate;
-        } else if (typeof event.exdate === 'object') {
-          // exdate can be an object with date values
-          exdateArray = Object.values(event.exdate);
+        if (typeof event.exdate === 'object') {
+          // exdate can be an array or object with date values
+          // Use Object.values() to extract dates regardless of structure
+          // This handles both [{date}, {date}] and {'2026-01-22': {date}} formats
+          const values = Object.values(event.exdate);
+
+          // Filter to get only valid date values (skip nested objects)
+          exdateArray = values.filter(v => v instanceof Date || (v && typeof v === 'object' && (v.getTime || v._d)));
+
+          console.log(`Excluding ${exdateArray.length} date(s) for ${event.summary}`);
         } else {
           // Single date
           exdateArray = [event.exdate];
@@ -308,7 +336,7 @@ function rawParser(rawData) {
             );
           });
 
-          // Skip this occurrence if it's been excluded (rescheduled)
+          // Skip this occurrence if it's been excluded (deleted)
           if (isExcluded) {
             console.log(`Skipping excluded date for ${event.summary}: ${date.toISOString().split('T')[0]}`);
             return;
@@ -373,7 +401,8 @@ function rawParser(rawData) {
             timezone: event.rrule.origOptions.tzid
           };
 
-          if (!shouldFilterDeclinedEvent(secondaryEvent, logseq.settings?.userEmail)) {
+          if (!shouldFilterDeclinedEvent(secondaryEvent, logseq.settings?.userEmail) &&
+              !isCancelledEvent(secondaryEvent)) {
             eventsArray.push(secondaryEvent);
           }
         });
@@ -388,7 +417,8 @@ function rawParser(rawData) {
           for (const recKey in event.recurrences) {
             const recEvent = event.recurrences[recKey];
 
-            if (!shouldFilterDeclinedEvent(recEvent, logseq.settings?.userEmail)) {
+            if (!shouldFilterDeclinedEvent(recEvent, logseq.settings?.userEmail) &&
+                !isCancelledEvent(recEvent)) {
               // Each recurrence is a modified instance of the recurring event
               // Add it to the events array with its rescheduled date/time
               eventsArray.push({
