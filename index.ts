@@ -55,6 +55,22 @@ const settingsTemplate: SettingSchemaDesc[] = [
     enumPicker: "select",
   },
   {
+    key: "userEmail",
+    type: "string",
+    default: "",
+    title: "Your Email Address (Optional)",
+    description:
+      "Enter your email address to filter out events you've declined. Leave blank to show all events. Example: user@example.com",
+  },
+  {
+    key: "hideDeclinedEvents",
+    type: "boolean",
+    default: true,
+    title: "Hide Events You've Declined",
+    description:
+      "When your email is configured above, automatically hide events where you've declined the invitation.",
+  },
+  {
     key: "calendar1Name",
     type: "string",
     default: "Calendar 1",
@@ -185,6 +201,38 @@ function sortDate(data) {
 
   return sorted;
 }
+
+function shouldFilterDeclinedEvent(event, userEmail) {
+  // Only filter if email is configured and feature is enabled
+  if (!userEmail || userEmail.trim() === "" || logseq.settings?.hideDeclinedEvents === false) {
+    return false;
+  }
+
+  // If event has no attendees, don't filter
+  if (!event.attendee) {
+    return false;
+  }
+
+  // Normalize attendee to array
+  const attendees = Array.isArray(event.attendee) ? event.attendee : [event.attendee];
+  const normalizedUserEmail = userEmail.trim().toLowerCase();
+
+  // Find user in attendee list
+  const userAttendee = attendees.find(attendee => {
+    if (!attendee.val) return false;
+    const attendeeEmail = attendee.val.replace('mailto:', '').toLowerCase();
+    return attendeeEmail === normalizedUserEmail;
+  });
+
+  // Filter if user declined
+  if (userAttendee && userAttendee.params?.PARTSTAT === 'DECLINED') {
+    console.log(`Filtering declined event: ${event.summary}`);
+    return true;
+  }
+
+  return false;
+}
+
 async function findDate(preferredDateFormat) {
   if ((await logseq.Editor.getCurrentPage()) != null) {
     //@ts-expect-error
@@ -214,7 +262,9 @@ function rawParser(rawData) {
     const event = rawDataV2[dataValue];
     if (typeof event.rrule == "undefined") {
       //@ts-expect-error
-      eventsArray.push(rawDataV2[dataValue]); //simplifying results, credits to https://github.com/muness/obsidian-ics for this implementations
+      if (!shouldFilterDeclinedEvent(event, logseq.settings?.userEmail)) {
+        eventsArray.push(rawDataV2[dataValue]); //simplifying results, credits to https://github.com/muness/obsidian-ics for this implementations
+      }
     } else {
       // Generate recurring events from 1 year ago to 2 years in the future
       const today = new Date();
@@ -322,7 +372,10 @@ function rawParser(rawData) {
             // Preserve timezone info for proper time formatting later
             timezone: event.rrule.origOptions.tzid
           };
-          eventsArray.push(secondaryEvent);
+
+          if (!shouldFilterDeclinedEvent(secondaryEvent, logseq.settings?.userEmail)) {
+            eventsArray.push(secondaryEvent);
+          }
         });
       } catch (error) {
         console.error("Error processing recurring event:", event.summary, error);
@@ -334,14 +387,17 @@ function rawParser(rawData) {
         try {
           for (const recKey in event.recurrences) {
             const recEvent = event.recurrences[recKey];
-            // Each recurrence is a modified instance of the recurring event
-            // Add it to the events array with its rescheduled date/time
-            eventsArray.push({
-              ...recEvent,
-              // Preserve timezone info if available
-              timezone: event.rrule.origOptions.tzid
-            });
-            console.log(`Added rescheduled instance of ${event.summary}: ${recKey} -> ${new Date(recEvent.start).toISOString().split('T')[0]}`);
+
+            if (!shouldFilterDeclinedEvent(recEvent, logseq.settings?.userEmail)) {
+              // Each recurrence is a modified instance of the recurring event
+              // Add it to the events array with its rescheduled date/time
+              eventsArray.push({
+                ...recEvent,
+                // Preserve timezone info if available
+                timezone: event.rrule.origOptions.tzid
+              });
+              console.log(`Added rescheduled instance of ${event.summary}: ${recKey} -> ${new Date(recEvent.start).toISOString().split('T')[0]}`);
+            }
           }
         } catch (error) {
           console.error("Error processing recurrence modifications:", event.summary, error);
