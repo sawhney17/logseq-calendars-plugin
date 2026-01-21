@@ -167,36 +167,13 @@ function sortDate(data) {
   });
 
   const sorted = validEvents.sort(function (a, b) {
-    // Sort by the displayed date/time in each event's timezone
-    // This ensures events sort by what the user sees (14:30) not absolute time
-    let aMoment, bMoment;
-
-    if (a.timezone) {
-      aMoment = moment(a.start).tz(a.timezone);
-    } else {
-      aMoment = moment(a.start);
-    }
-
-    if (b.timezone) {
-      bMoment = moment(b.start).tz(b.timezone);
-    } else {
-      bMoment = moment(b.start);
-    }
-
-    // Compare by date/time components (year, month, day, hour, minute)
-    // This gives us the "displayed" sort order
-    const aSort = aMoment.year() * 100000000 +
-                  (aMoment.month() + 1) * 1000000 +
-                  aMoment.date() * 10000 +
-                  aMoment.hour() * 100 +
-                  aMoment.minute();
-    const bSort = bMoment.year() * 100000000 +
-                  (bMoment.month() + 1) * 1000000 +
-                  bMoment.date() * 10000 +
-                  bMoment.hour() * 100 +
-                  bMoment.minute();
-
-    return aSort - bSort;
+    // Sort by absolute time (UTC), which corresponds to the displayed local time
+    // Since we display times in the user's local timezone, sorting by UTC
+    // gives us the correct chronological order
+    return (
+      Math.round(new Date(a.start).getTime() / 1000) -
+      Math.round(new Date(b.start).getTime() / 1000)
+    );
   });
 
   return sorted;
@@ -356,7 +333,7 @@ function rawParser(rawData) {
           let newEndDate;
           if (event.rrule.origOptions.tzid) {
             // tzid present - properly handle timezone conversion
-            const originalStartTime = moment(event.rrule.origOptions.dtstart);
+            const originalStartTime = moment.tz(event.rrule.origOptions.dtstart, event.rrule.origOptions.tzid);
             const hours = originalStartTime.hours();
             const minutes = originalStartTime.minutes();
             const seconds = originalStartTime.seconds();
@@ -588,9 +565,8 @@ async function insertJournalBlocks(
         formattedStart,
         preferredDateFormat
       );
-      let timezone = data[dataKey]["timezone"] || null;
-      let startTime = await formatTime(formattedStart, timezone);
-      let endTime = await formatTime(data[dataKey]["end"], timezone);
+      let startTime = await formatTime(formattedStart);
+      let endTime = await formatTime(data[dataKey]["end"]);
       let location = data[dataKey]["location"];
       let summary;
       summary = data[dataKey]["summary"];
