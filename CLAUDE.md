@@ -10,7 +10,7 @@ The original plugin was forked because the upstream maintainer was unresponsive 
 
 - **Fork repo:** https://github.com/CR0CKER/logseq-calendars-plugin
 - **Marketplace PR:** https://github.com/logseq/marketplace/pull/772
-- **Current release:** v3.0.0
+- **Current release:** v3.0.1
 
 All bug fixes in this fork were developed with the assistance of [Claude Code](https://claude.ai/code).
 
@@ -53,6 +53,16 @@ All fixes are in `index.ts`. They were developed across several feature branches
 **Problem:** Events the user had declined still appeared in the daily note.  
 **Fix:** New optional setting `filterDeclined` — when enabled, events where the user's RSVP is DECLINED are hidden.
 
+### 7. Toolbar entry label & icon polish (v3.0.1)
+**Commit:** `1130146e` on `main` (released as v3.0.1)
+**Problem:** The toolbar button registered under the legacy key `"open-calendar2"`, so Logseq's plugin menu surfaced that string instead of the published plugin ID. The toolbar icon was `ti-notebook`, which looked like a notebook and de-emphasized the sync action that the button actually triggers.
+**Fix:** In `index.ts` (`logseq.App.registerUIItem("toolbar", ...)` block near the bottom of the file):
+- Changed `key: "open-calendar2"` → `key: "logseq-ical-sync"`.
+- Changed `<i class="ti ti-notebook"></i>` → `<i class="ti ti-refresh"></i>`.
+The `openCalendar2` function name and the matching `data-on-click="openCalendar2"` handler were intentionally left unchanged — they are internal JS identifiers wired through `logseq.provideModel` and renaming has no user-visible benefit. User settings (calendar1..5 name/URL etc.) are keyed by plugin ID, not by toolbar item key, so this change is safe across upgrades.
+
+**Icon note:** Logseq bundles an older Tabler Icons set. Newer Tabler glyphs (e.g. `ti-calendar-down`, `ti-calendar-bolt`, `ti-calendar-sync`) render blank. When picking an icon, stick to classes that existed in older Tabler releases — verified-working examples: `ti-refresh`, `ti-notebook`, `ti-calendar`, `ti-calendar-event`, `ti-calendar-plus`, `ti-calendar-time`, `ti-cloud-download`, `ti-download`.
+
 ---
 
 ## Build & CI
@@ -72,11 +82,21 @@ npm run build
 **Key CI fix:** Parcel was pinned at 2.2.1 which bundled lmdb 2.1.6 — a native module with no prebuilt binaries for Node 20 that also couldn't compile on Node 20 due to `nan` incompatibility. Fixed by upgrading parcel to `^2.12.0` in `package.json`. Do not downgrade parcel below 2.9.
 
 ### Cutting a new release
+1. Bump `"version"` in `package.json` (the release asset includes `package.json`, and Logseq uses it to detect updates — so the tag and the `package.json` version must match).
+2. Commit the bump alongside whatever change motivates the release.
+3. Tag and push:
+   ```bash
+   git tag vX.Y.Z
+   git push origin vX.Y.Z
+   ```
+The workflow runs automatically and attaches `logseq-ical-sync-vX.Y.Z.zip` + `package.json` to the GitHub release. Verify at https://github.com/CR0CKER/logseq-calendars-plugin/releases before any marketplace updates.
+
+**`gh` CLI gotcha:** this checkout has both `origin` (CR0CKER/...) and `upstream` (sawhney17/...) remotes, and `gh` picks the upstream by default. When inspecting workflow runs or releases from the CLI, always pass `-R CR0CKER/logseq-calendars-plugin` — otherwise you'll see the upstream's old 2.x releases and no workflow runs.
+
 ```bash
-git tag vX.Y.Z
-git push origin vX.Y.Z
+gh run list -R CR0CKER/logseq-calendars-plugin --limit 3
+gh release view vX.Y.Z -R CR0CKER/logseq-calendars-plugin
 ```
-The workflow runs automatically and attaches the zip to the GitHub release. Verify at https://github.com/CR0CKER/logseq-calendars-plugin/releases before any marketplace updates.
 
 ---
 
@@ -116,7 +136,7 @@ Only open a new marketplace PR if you need to change the manifest itself (descri
 | npm name | `logseq-ical-sync` |
 | Display title | Logseq iCal Sync |
 | Author | CR0CKER |
-| Version | 3.0.0 |
+| Version | 3.0.1 |
 | License | ISC (same as original) |
 | Upstream original | sawhney17/logseq-calendars-plugin |
 
