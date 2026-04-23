@@ -721,10 +721,10 @@ async function main() {
   }
 
   logseq.App.registerUIItem("toolbar", {
-    key: "open-calendar2",
+    key: "logseq-ical-sync",
     template: `
       <a class="button" data-on-click="openCalendar2">
-        <i class="ti ti-notebook"></i>
+        <i class="ti ti-refresh"></i>
       </a>
     `,
   });

@@ -1,6 +1,6 @@
 {
   "name": "logseq-ical-sync",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Import GCal, iCloud, Outlook, and any iCal-compatible calendar to your Logseq daily notes",
   "main": "dist/index.html",
   "targets": {
